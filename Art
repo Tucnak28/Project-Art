@@ -1,0 +1,670 @@
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+F11:: Reload
+F10:: suspend
+*pause:: pause
+
+Ins::
+    CoordMode, Pixel, Screen
+    CoordMode, Mouse, Screen
+
+    FileSelectFile, file,,, Select an Image:, Images (*.gif; *.jpg; *.bmp; *.png; *.tif)
+
+    Gui, +AlwaysOnTop -Caption
+    Gui, Add, Picture, , %file%
+    Gui, Show
+
+    WinGetPos, Xaxis, Yaxis, Width, Height, A
+    Xaxis := Xaxis + 10
+    Yaxis := Yaxis + 6
+    Width:= 32
+    Height:= 32
+
+	NumberP := 1
+
+    loop, %Height%
+    {
+    loop, %Width%
+    {
+    MouseMove, Xaxis+1, Yaxis+1
+    PixelGetColor, color, Xaxis, Yaxis
+    Iniwrite, %color%, D:\Programs\Scripts\Minecraft\Art/Colors.ini, Position, %NumberP%
+    Yaxis++
+	NumberP := NumberP+1
+    continue
+    }
+    Yaxis:= Yaxis-Width
+	Xaxis++
+    }
+
+    Gui Destroy
+return
+
+
+PostClick4() {
+	ControlGet, chwnd, Hwnd,,, Minecraft* 1.16.5
+	DllCall("SendMessage", "UInt", chwnd, "UInt", 0x201, "UInt", 1, "UInt")
+	DllCall("SendMessage", "UInt", chwnd, "UInt", 0x202, "UInt", 0, "UInt")
+}
+
+ColourDistance(Color1, Color2, Byref Variable)
+{
+R1:=(Color1>>16)
+G1:=(Color1>>8) & 0xFF
+B1:=Color1 & 0xFF
+ 
+R2:=(Color2>>16)
+G2:=(Color2>>8) & 0xFF
+B2:=Color2 & 0xFF
+ 
+RD:=Abs(R1-R2)
+GD:=Abs(G1-G2)
+BD:=Abs(B1-B2)
+ 
+D:=RD*RD+GD*GD+BD*BD
+Variable:= D
+Return Variable
+}
+
+DoThing(Slot, Hotbar, White:=0, Dark:=0) {
+Time := 200
+If (Hotbar = no){
+send %Slot%
+sleep %Time%
+PostClick4()
+sleep %Time%
+}
+else
+{
+send %Slot%
+send %Hotbar%
+sleep %Time%
+PostClick4()
+sleep %Time%
+send %Hotbar%
+sleep %Time%
+}
+If (White = 1) {
+	send 9
+	sleep %Time%
+	PostClick4()
+	sleep %Time%
+
+}
+If (Dark = 1) {
+	send 8
+	sleep %Time%
+	PostClick4()
+	sleep %Time%
+}
+If (Dark = 2) {
+	send 8
+	sleep %Time%
+	PostClick4()
+	sleep 200
+	PostClick4()
+	sleep %Time%
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Difference(CN) {
+IniRead, HexCol, D:\Programs\Scripts\Minecraft\Art/Colors.ini, Position, %CN%
+ColourDistance(0xF2F9FC, HexCol, LBonemeal)
+ColourDistance(0xD0D6D9, HexCol, Bonemeal)
+ColourDistance(0xAAAFB2, HexCol, DBonemeal)
+ColourDistance(0x7F8385, HexCol, DDBonemeal)
+
+ColourDistance(0x191919, HexCol, LInk_sac)
+ColourDistance(0x151515, HexCol, Ink_sac)
+ColourDistance(0x111111, HexCol, DInk_sac)
+ColourDistance(0x0D0D0D, HexCol, DDInk_sac)
+
+ColourDistance(0x39D600, HexCol, LEmerald)
+ColourDistance(0x31B900, HexCol, Emerald)
+ColourDistance(0x279700, HexCol, DEmerald)
+ColourDistance(0x1E7100, HexCol, DDEmerald)
+
+ColourDistance(0x32E2E2, HexCol, LYellow_dye)
+ColourDistance(0x2BC3C3, HexCol, Yellow_dye)
+ColourDistance(0x249F9F, HexCol, DYellow_dye)
+ColourDistance(0x1B7878, HexCol, DDYellow_dye)
+
+ColourDistance(0xA37DEF, HexCol, LPink_dye)
+ColourDistance(0x8C6CCE, HexCol, Pink_dye)
+ColourDistance(0x7358A8, HexCol, DPink_dye)
+ColourDistance(0x56427E, HexCol, DDPink_dye)
+
+ColourDistance(0xB04B32, HexCol, LLapis_lazuli)
+ColourDistance(0x97402B, HexCol, Lapis_lazuli)
+ColourDistance(0x7C3424, HexCol, DLapis_lazuli)
+ColourDistance(0x5D271B, HexCol, DDLapis_lazuli)
+
+ColourDistance(0xD54BB0, HexCol, LMagenta_dye)
+ColourDistance(0xB84097, HexCol, Magenta_dye)
+ColourDistance(0x96347C, HexCol, DMagenta_dye)
+ColourDistance(0x71275D, HexCol, DDMagenta_dye)
+
+ColourDistance(0x574879, HexCol, LChorus_fruit)
+ColourDistance(0x4A3D68, HexCol, Chorus_fruit)
+ColourDistance(0x3D3255, HexCol, DChorus_fruit)
+ColourDistance(0x2D263F, HexCol, DDChorus_fruit)
+
+ColourDistance(0x19CA7D, HexCol, LLime_dye)
+ColourDistance(0x15AE6C, HexCol, Lime_dye)
+ColourDistance(0x118E58, HexCol, DLime_dye)
+ColourDistance(0x0D6B42, HexCol, DDLime_dye)
+
+ColourDistance(0x2D3B8C, HexCol, LApple)
+ColourDistance(0x273279, HexCol, Apple)
+ColourDistance(0x202963, HexCol, DApple)
+ColourDistance(0x181F4A, HexCol, DDApple)
+
+ColourDistance(0x4CEBF7, HexCol, LGold_nugget)
+ColourDistance(0x41CBD4, HexCol, Gold_nugget)
+ColourDistance(0x35A6AE, HexCol, DGold_nugget)
+ColourDistance(0x277D82, HexCol, DDGold_nugget)
+
+ColourDistance(0x2483B8, HexCol, LGlowstone_dust)
+ColourDistance(0x1F719E, HexCol, Glowstone_dust)
+ColourDistance(0x195C81, HexCol, DGlowstone_dust)
+ColourDistance(0x134561, HexCol, DDGlowstone_dust)
+
+ColourDistance(0x327DD5, HexCol, LOrange_dye)
+ColourDistance(0x2B6CB8, HexCol, Orange_dye)
+ColourDistance(0x245896, HexCol, DOrange_dye)
+ColourDistance(0x1B4271, HexCol, DDOrange_dye)
+
+ColourDistance(0xD59765, HexCol, LLight_blue_dye)
+ColourDistance(0xB88257, HexCol, Light_blue_dye)
+ColourDistance(0x966B47, HexCol, DLight_blue_dye)
+ColourDistance(0x715035, HexCol, DDLight_blue_dye)
+
+ColourDistance(0x0000FC, HexCol, LRed_dye)
+ColourDistance(0x0000D9, HexCol, Red_dye)
+ColourDistance(0x0000B2, HexCol, DRed_dye)
+ColourDistance(0x000085, HexCol, DDRed_dye)
+
+ColourDistance(0x007B00, HexCol, LOak_leaves)
+ColourDistance(0x006900, HexCol, Oak_leaves)
+ColourDistance(0x005600, HexCol, DOak_leaves)
+ColourDistance(0x004000, HexCol, DDOak_leaves)
+
+ColourDistance(0x29514B, HexCol, LPoisonous_potato)
+ColourDistance(0x244540, HexCol, Poisonous_potato)
+ColourDistance(0x1D3834, HexCol, DPoisonous_potato)
+ColourDistance(0x162A27, HexCol, DDPoisonous_potato)
+
+ColourDistance(0x47768D, HexCol, LDark_oak_log)
+ColourDistance(0x3D657A, HexCol, Dark_oak_log)
+ColourDistance(0x315363, HexCol, DDark_oak_log)
+ColourDistance(0x263E4A, HexCol, DDDark_oak_log)
+
+ColourDistance(0x24519D, HexCol, LMagma_cream)
+ColourDistance(0x1F4587, HexCol, Magma_cream)
+ColourDistance(0x19386F, HexCol, DMagma_cream)
+ColourDistance(0x132A53, HexCol, DDMagma_cream)
+
+ColourDistance(0xB03E7D, HexCol, LPurple_dye)
+ColourDistance(0x97356C, HexCol, Purple_dye)
+ColourDistance(0x7C2B58, HexCol, DPurple_dye)
+ColourDistance(0x5D2142, HexCol, DDPurple_dye)
+
+ColourDistance(0x00026F, HexCol, LNether_wart)
+ColourDistance(0x00015F, HexCol, Nether_wart)
+ColourDistance(0x00014E, HexCol, DNether_wart)
+ColourDistance(0x00013A, HexCol, DDNether_wart)
+
+ColourDistance(0xA1E6F4, HexCol, LPumpkin_seeds)
+ColourDistance(0x8AC7D2, HexCol, Pumpkin_seeds)
+ColourDistance(0x72A2AC, HexCol, DPumpkin_seeds)
+ColourDistance(0x557A80, HexCol, DDPumpkin_seeds)
+
+ColourDistance(0xFC9E9E, HexCol, LIce)
+ColourDistance(0xD98888, HexCol, Ice)
+ColourDistance(0xB26F6F, HexCol, DIce)
+ColourDistance(0x855353, HexCol, DDIce)
+
+ColourDistance(0x886B6F, HexCol, LMycelium)
+ColourDistance(0x765C5F, HexCol, Mycelium)
+ColourDistance(0x604B4E, HexCol, DMycelium)
+ColourDistance(0x48383A, HexCol, DDMycelium)
+
+ColourDistance(0x37B07D, HexCol, LGrass)
+ColourDistance(0x2F976C, HexCol, Grass)
+ColourDistance(0x277C58, HexCol, DGrass)
+ColourDistance(0x1D5D42, HexCol, DDGrass)
+
+ColourDistance(0xD2D85B, HexCol, LPrismarine_crystals)
+ColourDistance(0xB5BA4E, HexCol, Prismarine_crystals)
+ColourDistance(0x94983F, HexCol, DPrismarine_crystals)
+ColourDistance(0x6F722F, HexCol, DDPrismarine_crystals)
+
+ColourDistance(0x324B65, HexCol, LCocoa_beans)
+ColourDistance(0x2B4057, HexCol, Cocoa_beans)
+ColourDistance(0x243447, HexCol, DCocoa_beans)
+ColourDistance(0x1B2735, HexCol, DDCocoa_beans)
+
+ColourDistance(0x5B3D4B, HexCol, LPurpur_block)
+ColourDistance(0x4E3440, HexCol, Purpur_block)
+ColourDistance(0x3F2A34, HexCol, DPurpur_block)
+ColourDistance(0x2F2027, HexCol, DDPurpur_block)
+
+ColourDistance(0xFC7E49, HexCol, LLapis_lazuli_ore)
+ColourDistance(0xD96D3E, HexCol, Lapis_lazuli_ore)
+ColourDistance(0xB25933, HexCol, DLapis_lazuli_ore)
+ColourDistance(0x854227, HexCol, DDLapis_lazuli_ore)
+
+ColourDistance(0xFC3F3F, HexCol, LLapis_lazuli_block)
+ColourDistance(0xD93636, HexCol, Lapis_lazuli_block)
+ColourDistance(0xB22C2C, HexCol, DLapis_lazuli_block)
+ColourDistance(0x852121, HexCol, DDLapis_lazuli_block)
+
+ColourDistance(0xB6A6A2, HexCol, LGray_dye)
+ColourDistance(0x9C8E8B, HexCol, Gray_dye)
+ColourDistance(0x7F7572, HexCol, DGray_dye)
+ColourDistance(0x605755, HexCol, DDGray_dye)
+
+ColourDistance(0x9FAFCF, HexCol, LEgg)
+ColourDistance(0x8896B2, HexCol, Egg)
+ColourDistance(0x707B91, HexCol, DEgg)
+ColourDistance(0x545C6D, HexCol, DDEgg)
+
+ColourDistance(0x977D4B, HexCol, LCyan_Dye)
+ColourDistance(0x826C40, HexCol, Cyan_Dye)
+ColourDistance(0x6B5834, HexCol, DCyan_Dye)
+ColourDistance(0x504227, HexCol, DDCyan_Dye)
+
+ColourDistance(0x4C6C95, HexCol, LMelon_seeds)
+ColourDistance(0x415D80, HexCol, Melon_seeds)
+ColourDistance(0x354B69, HexCol, DMelon_seeds)
+ColourDistance(0x27384E, HexCol, DDMelon_seeds)
+
+
+Diff := Min(LBonemeal, Bonemeal, DBonemeal, DDBonemeal, LInk_sac, Ink_sac, DInk_sac, DDInk_sac, LEmerald, Emerald, DEmerald, DDEmerald, LYellow_dye, Yellow_dye, DYellow_dye, DDYellow_dye, LPink_dye, Pink_dye, DPink_dye, DDPink_dye, LLapis_lazuli, Lapis_lazuli, DLapis_lazuli, DDLapis_lazuli, LMagenta_dye, Magenta_dye, DMagenta_dye, DDMagenta_dye,  LChorus_fruit, Chorus_fruit, DChorus_fruit, DDChorus_fruit,  LLime_dye, Lime_dye, DLime_dye, DDLime_dye,  LApple, Apple, DApple, DDApple,  LGold_nugget, Gold_nugget, DGold_nugget, DDGold_nugget, LGlowstone_dust, Glowstone_dust, DGlowstone_dust, DDGlowstone_dust,  LOrange_dye, Orange_dye, DOrange_dye, DDOrange_dye,  LLight_blue_dye, Light_blue_dye, DLight_blue_dye, DDLight_blue_dye,  LRed_dye, Red_dye, DRed_dye, DDRed_dye, LOak_leaves, Oak_leaves, DOak_leaves, DDOak_leaves, LPoisonous_potato, Poisonous_potato, DPoisonous_potato, DDPoisonous_potato,  LDark_oak_log, Dark_oak_log, DDark_oak_log, DDDark_oak_log,  LMagma_cream, Magma_cream, DMagma_cream, DDMagma_cream,  LPurple_dye, Purple_dye, DPurple_dye, DDPurple_dye, LNether_wart, Nether_wart, DNether_wart, DDNether_wart,  LPumpkin_seeds, Pumpkin_seeds, DPumpkin_seeds, DDPumpkin_seeds, LIce, Ice, DIce, DDIce, LMycelium, Mycelium, DMycelium, DDMycelium, LGrass, Grass, DGrass, DDGrass,  LPrismarine_crystals, Prismarine_crystals, DPrismarine_crystals, DDPrismarine_crystals, LCocoa_beans, Cocoa_beans, DCocoa_beans, DDCocoa_beans, LPurpur_block, Purpur_block, DPurpur_block, DDPurpur_block, LLapis_lazuli_ore, Lapis_lazuli_ore, DLapis_lazuli_ore, DDLapis_lazuli_ore, LLapis_lazuli_block, Lapis_lazuli_block, DLapis_lazuli_block, DDLapis_lazuli_block, LGray_dye, Gray_dye, DGray_dye, DDGray_dye, LEgg, Egg, DEgg, DDEgg,	 LCyan_Dye, Cyan_Dye, DCyan_Dye, DDCyan_Dye, LMelon_seeds, Melon_seeds, DMelon_seeds, DDMelon_seeds)
+If (Diff = LBonemeal)
+DoThing(1, no, 1)
+If (Diff = Bonemeal)
+DoThing(1, no)
+If (Diff = DBonemeal)
+DoThing(1, no, 0, 1)
+If (Diff = DDBonemeal)
+DoThing(1, no, 0, 2)
+
+If (Diff = LInk_sac)
+DoThing(2, no, 1)
+If (Diff = Ink_sac)
+DoThing(2, no)
+If (Diff = DInk_sac)
+DoThing(2, no, 0, 1)
+If (Diff = DDInk_sac)
+DoThing(2, no, 0, 2)
+
+If (Diff = LEmerald)
+DoThing(3, no, 1)
+If (Diff = Emerald)
+DoThing(3, no)
+If (Diff = DEmerald)
+DoThing(3, no, 0, 1)
+If (Diff = DDEmerald)
+DoThing(3, no, 0, 2)
+
+If (Diff = LYellow_dye)
+DoThing(4, no, 1)
+If (Diff = Yellow_dye)
+DoThing(4, no)
+If (Diff = DYellow_dye)
+DoThing(4, no, 0, 1)
+If (Diff = DDYellow_dye)
+DoThing(4, no, 0, 2)
+
+If (Diff = LPink_dye)
+DoThing(5, no, 1)
+If (Diff = Pink_dye)
+DoThing(5, no)
+If (Diff = DPink_dye)
+DoThing(5, no, 0, 1)
+If (Diff = DDPink_dye)
+DoThing(5, no, 0, 2)
+
+If (Diff = LLapis_lazuli)
+DoThing(6, no, 1)
+If (Diff = Lapis_lazuli)
+DoThing(6, no)
+If (Diff = DLapis_lazuli)
+DoThing(6, no, 0, 1)
+If (Diff = DDLapis_lazuli)
+DoThing(6, no, 0, 2)
+
+If (Diff = LMagenta_dye)
+DoThing(7, no, 1)
+If (Diff = Magenta_dye)
+DoThing(7, no)
+If (Diff = DMagenta_dye)
+DoThing(7, no, 0, 1)
+If (Diff = DDMagenta_dye)
+DoThing(7, no, 0, 2)
+
+If (Diff = LChorus_fruit)
+DoThing(1, "m", 1)
+If (Diff = Chorus_fruit)
+DoThing(1, "m")
+If (Diff = DChorus_fruit)
+DoThing(1, "m", 0, 1)
+If (Diff = DDChorus_fruit)
+DoThing(1, "m", 0, 2)
+
+If (Diff = LLime_dye)
+DoThing(2, "m", 1)
+If (Diff = Lime_dye)
+DoThing(2, "m")
+If (Diff = DLime_dye)
+DoThing(2, "m", 0, 1)
+If (Diff = DDLime_dye)
+DoThing(2, "m", 0, 2)
+
+If (Diff = LApple)
+DoThing(3, "m", 1)
+If (Diff = Apple)
+DoThing(3, "m")
+If (Diff = DApple)
+DoThing(3, "m", 0, 1)
+If (Diff = DDApple)
+DoThing(3, "m", 0, 2)
+
+If (Diff = LGold_nugget)
+DoThing(4, "m", 1)
+If (Diff = Gold_nugget)
+DoThing(4, "m")
+If (Diff = DGold_nugget)
+DoThing(4, "m", 0, 1)
+If (Diff = DDGold_nugget)
+DoThing(4, "m", 0, 2)
+
+If (Diff = LGlowstone_dust)
+DoThing(5, "m", 1)
+If (Diff = Glowstone_dust)
+DoThing(5, "m")
+If (Diff = DGlowstone_dust)
+DoThing(5, "m", 0, 1)
+If (Diff = DDGlowstone_dust)
+DoThing(5, "m", 0, 2)
+
+If (Diff = LOrange_dye)
+DoThing(6, "m", 1)
+If (Diff = Orange_dye)
+DoThing(6, "m")
+If (Diff = DOrange_dye)
+DoThing(6, "m", 0, 1)
+If (Diff = DDOrange_dye)
+DoThing(6, "m", 0, 2)
+
+If (Diff = LLight_blue_dye)
+DoThing(7, "m", 1)
+If (Diff = Light_blue_dye)
+DoThing(7, "m")
+If (Diff = DLight_blue_dye)
+DoThing(7, "m", 0, 1)
+If (Diff = DDLight_blue_dye)
+DoThing(7, "m", 0, 2)
+
+If (Diff = LRed_dye)
+DoThing(8, "m", 1)
+If (Diff = Red_dye)
+DoThing(8, "m")
+If (Diff = DRed_dye)
+DoThing(8, "m", 0, 1)
+If (Diff = DDRed_dye)
+DoThing(8, "m", 0, 2)
+
+If (Diff = LOak_leaves)
+DoThing(9, "m", 1)
+If (Diff = Oak_leaves)
+DoThing(9, "m")
+If (Diff = DOak_leaves)
+DoThing(9, "m", 0, 1)
+If (Diff = DDOak_leaves)
+DoThing(9, "m", 0, 2)
+
+If (Diff = LPoisonous_potato)
+DoThing(1, "n", 1)
+If (Diff = Poisonous_potato)
+DoThing(1, "n")
+If (Diff = DPoisonous_potato)
+DoThing(1, "n", 0, 1)
+If (Diff = DDPoisonous_potato)
+DoThing(1, "n", 0, 2)
+
+If (Diff = LDark_oak_log)
+DoThing(2, "n", 1)
+If (Diff = Dark_oak_log)
+DoThing(2, "n")
+If (Diff = DDark_oak_log)
+DoThing(2, "n", 0, 1)
+If (Diff = DDDark_oak_log)
+DoThing(2, "n", 0, 2)
+
+If (Diff = LMagma_cream)
+DoThing(3, "n", 1)
+If (Diff = Magma_cream)
+DoThing(3, "n")
+If (Diff = DMagma_cream)
+DoThing(3, "n", 0, 1)
+If (Diff = DDMagma_cream)
+DoThing(3, "n", 0, 2)
+
+If (Diff = LPurple_dye)
+DoThing(4, "n", 1)
+If (Diff = Purple_dye)
+DoThing(4, "n")
+If (Diff = DPurple_dye)
+DoThing(4, "n", 0, 1)
+If (Diff = DDPurple_dye)
+DoThing(4, "n", 0, 2)
+
+If (Diff = LNether_wart)
+DoThing(5, "n", 1)
+If (Diff = Nether_wart)
+DoThing(5, "n")
+If (Diff = DNether_wart)
+DoThing(5, "n", 0, 1)
+If (Diff = DDNether_wart)
+DoThing(5, "n", 0, 2)
+
+If (Diff = LPumpkin_seeds)
+DoThing(6, "n", 1)
+If (Diff = Pumpkin_seeds)
+DoThing(6, "n")
+If (Diff = DPumpkin_seeds)
+DoThing(6, "n", 0, 1)
+If (Diff = DDPumpkin_seeds)
+DoThing(6, "n", 0, 2)
+
+If (Diff = LIce)
+DoThing(7, "n", 1)
+If (Diff = Ice)
+DoThing(7, "n")
+If (Diff = DIce)
+DoThing(7, "n", 0, 1)
+If (Diff = DDIce)
+DoThing(7, "n", 0, 2)
+
+If (Diff = LMycelium)
+DoThing(8, "n", 1)
+If (Diff = Mycelium)
+DoThing(8, "n")
+If (Diff = DMycelium)
+DoThing(8, "n", 0, 1)
+If (Diff = DDMycelium)
+DoThing(8, "n", 0, 2)
+
+If (Diff = LGrass)
+DoThing(9, "n", 1)
+If (Diff = Grass)
+DoThing(9, "n")
+If (Diff = DGrass)
+DoThing(9, "n", 0, 1)
+If (Diff = DDGrass)
+DoThing(9, "n", 0, 2)
+
+If (Diff = LPrismarine_crystals)
+DoThing(1, "b", 1)
+If (Diff = Prismarine_crystals)
+DoThing(1, "b")
+If (Diff = DPrismarine_crystals)
+DoThing(1, "b", 0, 1)
+If (Diff = DDPrismarine_crystals)
+DoThing(1, "b", 0, 2)
+
+If (Diff = LCocoa_beans)
+DoThing(2, "b", 1)
+If (Diff = Cocoa_beans)
+DoThing(2, "b")
+If (Diff = DCocoa_beans)
+DoThing(2, "b", 0, 1)
+If (Diff = DDCocoa_beans)
+DoThing(2, "b", 0, 2)
+
+If (Diff = LPurpur_block)
+DoThing(3, "b", 1)
+If (Diff = Purpur_block)
+DoThing(3, "b")
+If (Diff = DPurpur_block)
+DoThing(3, "b", 0, 1)
+If (Diff = DDPurpur_block)
+DoThing(3, "b", 0, 2)
+
+If (Diff = LLapis_lazuli_ore)
+DoThing(4, "b", 1)
+If (Diff = Lapis_lazuli_ore)
+DoThing(4, "b")
+If (Diff = DLapis_lazuli_ore)
+DoThing(4, "b", 0, 1)
+If (Diff = DDLapis_lazuli_ore)
+DoThing(4, "b", 0, 2)
+
+If (Diff = LLapis_lazuli_block)
+DoThing(5, "b", 1)
+If (Diff = Lapis_lazuli_block)
+DoThing(5, "b")
+If (Diff = DLapis_lazuli_block)
+DoThing(5, "b", 0, 1)
+If (Diff = DDLapis_lazuli_block)
+DoThing(5, "b", 0, 2)
+
+If (Diff = LGray_dye)
+DoThing(6, "b", 1)
+If (Diff = Gray_dye)
+DoThing(6, "b")
+If (Diff = DGray_dye)
+DoThing(6, "b", 0, 1)
+If (Diff = DDGray_dye)
+DoThing(6, "b", 0, 2)
+
+If (Diff = LEgg)
+DoThing(7, "b", 1)
+If (Diff = Egg)
+DoThing(7, "b")
+If (Diff = DEgg)
+DoThing(7, "b", 0, 1)
+If (Diff = DDEgg)
+DoThing(7, "b", 0, 2)
+
+If (Diff = LCyan_Dye)
+DoThing(8, "b", 1)
+If (Diff = Cyan_Dye)
+DoThing(8, "b")
+If (Diff = DCyan_Dye)
+DoThing(8, "b", 0, 1)
+If (Diff = DDCyan_Dye)
+DoThing(8, "b", 0, 2)
+
+If (Diff = LMelon_seeds)
+DoThing(9, "b", 1)
+If (Diff = Melon_seeds)
+DoThing(9, "b")
+If (Diff = DMelon_seeds)
+DoThing(9, "b", 0, 1)
+If (Diff = DDMelon_seeds)
+DoThing(9, "b", 0, 2)
+}
+
+PixelLocation(MoveX, MoveY) {
+DllCall("mouse_event", "UInt", 0x01, "UInt", MoveX, "UInt", MoveY)
+}
+
+
+home::
+CN := 0
+ini := 0
+Loop 16 {
+	ini := ini + 1
+	IniRead, MoveY1, D:\Programs\Scripts\Minecraft\Art/Colors.ini, Location, Y%ini%
+	IniRead, MoveY2, D:\Programs\Scripts\Minecraft\Art/Colors.ini, Location, YY%ini%
+	IniRead, MoveUpX, D:\Programs\Scripts\Minecraft\Art/Colors.ini, Location, MoveUpX%ini%
+	IniRead, MoveUpY, D:\Programs\Scripts\Minecraft\Art/Colors.ini, Location, MoveUpY%ini%
+	send z
+	sleep 50
+	send z
+	PixelLocation(MoveUpX, MoveUpY)
+	Loop 8 {
+		CN := CN + 1
+		Difference(CN)
+		PixelLocation(0, MoveY1)
+	}
+	Loop 16 {
+		CN := CN + 1
+		Difference(CN)
+		PixelLocation(0, MoveY2)
+	}
+	Loop 8 {
+		CN := CN + 1
+		Difference(CN)
+		PixelLocation(0, MoveY1)
+	}
+	}
+Loop 16 {
+	IniRead, MoveY1, D:\Programs\Scripts\Minecraft\Art/Colors.ini, Location, Y%ini%
+	IniRead, MoveY2, D:\Programs\Scripts\Minecraft\Art/Colors.ini, Location, YY%ini%
+	IniRead, MoveUpX, D:\Programs\Scripts\Minecraft\Art/Colors.ini, Location, MoveUpX%ini%
+	IniRead, MoveUpY, D:\Programs\Scripts\Minecraft\Art/Colors.ini, Location, MoveUpY%ini%
+	StringReplace, MoveUpX, MoveUpX, -,,
+	send z
+	sleep 50
+	send z
+	PixelLocation(MoveUpX, MoveUpY)
+	Loop 8 {
+	CN := CN + 1
+	Difference(CN)
+	PixelLocation(0, MoveY1)
+	}
+	
+	Loop 16 {
+	CN := CN + 1
+	Difference(CN)
+	PixelLocation(0, MoveY2)
+	}
+	
+	Loop 8 {
+	CN := CN + 1
+	Difference(CN)
+	PixelLocation(0, MoveY1)
+	}
+	ini := ini - 1
+	}
+return
