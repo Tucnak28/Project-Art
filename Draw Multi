@@ -1,0 +1,712 @@
+for images = 15, 16 do
+	function swap(item)
+	for i = 10, 45 do
+			local inv = openInventory()
+			local getSlot = inv.getSlot
+			local slot = inv.getSlot(i)
+			if(slot.id == "minecraft:"..item) then
+				inv.swap(37, i)
+				sleep(100)
+		end
+	end
+	end
+	function DoThing(item, tone)
+		swap(item)
+		attack()
+		sleep(200)
+		if(tone == "L") then
+			swap("feather")
+			attack()
+			sleep(170)
+		elseif(tone == "D") then
+			swap("coal")
+			attack()
+			sleep(170)
+		elseif(tone == "DD") then
+			swap("coal")
+			attack()
+			sleep(200)
+			attack()
+			sleep(170)
+		end
+	end
+	
+	imageP = {
+			{"image_part_001.jpg"},
+			{"image_part_002.jpg"},
+			{"image_part_003.jpg"},
+			{"image_part_004.jpg"},
+			{"image_part_005.jpg"},
+			{"image_part_006.jpg"},
+			{"image_part_007.jpg"},
+			{"image_part_008.jpg"},
+			{"image_part_009.jpg"},
+			{"image_part_010.jpg"},
+			{"image_part_011.jpg"},
+			{"image_part_012.jpg"},
+			{"image_part_013.jpg"},
+			{"image_part_014.jpg"},
+			{"image_part_015.jpg"},
+			{"image_part_016.jpg"},
+			{"image_part_017.jpg"},
+			{"image_part_018.jpg"},
+			{"image_part_019.jpg"},
+			{"image_part_020.jpg"},
+			{"image_part_021.jpg"},
+			{"image_part_022.jpg"},
+			{"image_part_023.jpg"},
+			{"image_part_024.jpg"},
+			{"image_part_025.jpg"},
+			{"image_part_026.jpg"},
+			{"image_part_027.jpg"},
+			{"image_part_028.jpg"},
+			{"image_part_029.jpg"},
+			{"image_part_030.jpg"}
+			}
+
+	function ColourDistance(r1, g1, b1, b2, g2, r2)
+	  local dr = r1 - r2
+	  local dg = g1 - g2
+	  local db = b1 - b2
+	  return math.sqrt(dr * dr + dg * dg + db * db)
+	end
+	-- Image Load and pixel colors
+	function Difference(x, y)
+	local myimage = image.load(imageP[images][1])
+	local pixel = myimage.getPixel(x, y)
+	local r = pixel[1] * 255
+	local g = pixel[2] * 255
+	local b = pixel[3] * 255
+
+	LBonemeal = ColourDistance(242, 249, 252, r, g, b)
+	Bonemeal = ColourDistance(208, 214, 217, r, g, b)
+	DBonemeal = ColourDistance(170, 175, 178, r, g, b)
+	DDBonemeal = ColourDistance(127, 131, 133, r, g, b)
+
+	LInk_sac = ColourDistance(25, 25, 25, r, g, b)
+	Ink_sac = ColourDistance(21, 21, 21, r, g, b)
+	DInk_sac = ColourDistance(17, 17, 17, r, g, b)
+	DDInk_sac = ColourDistance(13, 13, 13, r, g, b)
+
+	LEmerald = ColourDistance(57, 214, 0, r, g, b)
+	Emerald = ColourDistance(49, 185, 0, r, g, b)
+	DEmerald = ColourDistance(39, 151, 0, r, g, b)
+	DDEmerald = ColourDistance(30, 113, 0, r, g, b)
+
+	LYellow_dye = ColourDistance(50, 226, 226, r, g, b)
+	Yellow_dye = ColourDistance(43, 195, 195, r, g, b)
+	DYellow_dye = ColourDistance(36, 159, 159, r, g, b)
+	DDYellow_dye = ColourDistance(27, 120, 120, r, g, b)
+
+	LPink_dye = ColourDistance(163, 125, 239, r, g, b)
+	Pink_dye = ColourDistance(140, 108, 206, r, g, b)
+	DPink_dye = ColourDistance(115, 88, 168, r, g, b)
+	DDPink_dye = ColourDistance(86, 66, 126, r, g, b)
+
+	LLapis_lazuli = ColourDistance(176, 75, 50, r, g, b)
+	Lapis_lazuli = ColourDistance(151, 64, 43, r, g, b)
+	DLapis_lazuli = ColourDistance(124, 52, 36, r, g, b)
+	DDLapis_lazuli = ColourDistance(93, 39, 27, r, g, b)
+
+	LMagenta_dye = ColourDistance(213, 75, 176, r, g, b)
+	Magenta_dye = ColourDistance(184, 64, 151, r, g, b)
+	DMagenta_dye = ColourDistance(150, 52, 124, r, g, b)
+	DDMagenta_dye = ColourDistance(113, 39, 93, r, g, b)
+
+	LChorus_fruit = ColourDistance(87, 72, 121, r, g, b)
+	Chorus_fruit = ColourDistance(74, 61, 104, r, g, b)
+	DChorus_fruit = ColourDistance(61, 50, 85, r, g, b)
+	DDChorus_fruit = ColourDistance(45, 38, 63, r, g, b)
+
+	LLime_dye = ColourDistance(25, 202, 125, r, g, b)
+	Lime_dye = ColourDistance(21, 174, 108, r, g, b)
+	DLime_dye = ColourDistance(17, 142, 88, r, g, b)
+	DDLime_dye = ColourDistance(13, 107, 66, r, g, b)
+
+	LApple = ColourDistance(45, 59, 140, r, g, b)
+	Apple = ColourDistance(39, 50, 121, r, g, b)
+	DApple = ColourDistance(32, 41, 99, r, g, b)
+	DDApple = ColourDistance(24, 31, 74, r, g, b)
+
+	LGold_nugget = ColourDistance(76, 235, 247, r, g, b)
+	Gold_nugget = ColourDistance(65, 203, 212, r, g, b)
+	DGold_nugget = ColourDistance(53, 166, 174, r, g, b)
+	DDGold_nugget = ColourDistance(39, 125, 130, r, g, b)
+
+	LGlowstone_dust = ColourDistance(36, 131, 184, r, g, b)
+	Glowstone_dust = ColourDistance(31, 113, 158, r, g, b)
+	DGlowstone_dust = ColourDistance(25, 92, 129, r, g, b)
+	DDGlowstone_dust = ColourDistance(19, 69, 97, r, g, b)
+
+	LOrange_dye = ColourDistance(50, 125, 213, r, g, b)
+	Orange_dye = ColourDistance(43, 108, 184, r, g, b)
+	DOrange_dye = ColourDistance(36, 88, 150, r, g, b)
+	DDOrange_dye = ColourDistance(27, 66, 113, r, g, b)
+
+	LLight_blue_dye = ColourDistance(213, 151, 101, r, g, b)
+	Light_blue_dye = ColourDistance(213, 151, 101, r, g, b)
+	DLight_blue_dye = ColourDistance(150, 107, 71, r, g, b)
+	DDLight_blue_dye = ColourDistance(113, 80, 53, r, g, b)
+
+	LRed_dye = ColourDistance(0, 0, 252, r, g, b)
+	Red_dye = ColourDistance(0, 0, 217, r, g, b)
+	DRed_dye = ColourDistance(0, 0, 178, r, g, b)
+	DDRed_dye = ColourDistance(0, 0, 133, r, g, b)
+
+	LOak_leaves = ColourDistance(0, 123, 0, r, g, b)
+	Oak_leaves = ColourDistance(0, 105, 0, r, g, b)
+	DOak_leaves = ColourDistance(0, 86, 0, r, g, b)
+	DDOak_leaves = ColourDistance(0, 64, 0, r, g, b)
+
+	LPoisonous_potato = ColourDistance(41, 81, 75, r, g, b)
+	Poisonous_potato = ColourDistance(36, 69, 64, r, g, b)
+	DPoisonous_potato = ColourDistance(29, 56, 52, r, g, b)
+	DDPoisonous_potato = ColourDistance(22, 42, 39, r, g, b)
+
+	LDark_oak_log = ColourDistance(71, 118, 141, r, g, b)
+	Dark_oak_log = ColourDistance(61, 101, 122, r, g, b)
+	DDark_oak_log = ColourDistance(49, 83, 99, r, g, b)
+	DDDark_oak_log = ColourDistance(38, 62, 74, r, g, b)
+
+	LMagma_cream = ColourDistance(36, 81, 157, r, g, b)
+	Magma_cream = ColourDistance(31, 69, 135, r, g, b)
+	DMagma_cream = ColourDistance(25, 56, 111, r, g, b)
+	DDMagma_cream = ColourDistance(19, 42, 83, r, g, b)
+
+	LPurple_dye = ColourDistance(176, 62, 125, r, g, b)
+	Purple_dye = ColourDistance(151, 53, 108, r, g, b)
+	DPurple_dye = ColourDistance(124, 43, 88, r, g, b)
+	DDPurple_dye = ColourDistance(93, 33, 66, r, g, b)
+
+	LNether_wart = ColourDistance(0, 2, 111, r, g, b)
+	Nether_wart = ColourDistance(0, 1, 95, r, g, b)
+	DNether_wart = ColourDistance(0, 1, 78, r, g, b)
+	DDNether_wart = ColourDistance(0, 1, 58, r, g, b)
+
+	LPumpkin_seeds = ColourDistance(161, 230, 244, r, g, b)
+	Pumpkin_seeds = ColourDistance(138, 199, 210, r, g, b)
+	DPumpkin_seeds = ColourDistance(114, 162, 172, r, g, b)
+	DDPumpkin_seeds = ColourDistance(85, 122, 128, r, g, b)
+
+	LIce = ColourDistance(252, 158, 158, r, g, b)
+	Ice = ColourDistance(217, 136, 136, r, g, b)
+	DIce = ColourDistance(178, 111, 111, r, g, b)
+	DDIce = ColourDistance(133, 83, 83, r, g, b)
+
+	LMycelium = ColourDistance(136, 107, 111, r, g, b)
+	Mycelium = ColourDistance(118, 92, 95, r, g, b)
+	DMycelium = ColourDistance(96, 75, 78, r, g, b)
+	DDMycelium = ColourDistance(72, 56, 58, r, g, b)
+
+	LGrass = ColourDistance(55, 176, 125, r, g, b)
+	Grass = ColourDistance(47, 151, 108, r, g, b)
+	DGrass = ColourDistance(39, 124, 88, r, g, b)
+	DDGrass = ColourDistance(29, 93, 66, r, g, b)
+
+	LPrismarine_crystals = ColourDistance(210, 216, 91, r, g, b)
+	Prismarine_crystals = ColourDistance(181, 186, 78, r, g, b)
+	DPrismarine_crystals = ColourDistance(148, 152, 63, r, g, b)
+	DDPrismarine_crystals = ColourDistance(111, 114, 47, r, g, b)
+
+	LCocoa_beans = ColourDistance(50, 75, 101, r, g, b)
+	Cocoa_beans = ColourDistance(43, 64, 87, r, g, b)
+	DCocoa_beans = ColourDistance(36, 52, 71, r, g, b)
+	DDCocoa_beans = ColourDistance(27, 39, 53, r, g, b)
+
+	LPurpur_block = ColourDistance(91, 61, 75, r, g, b)
+	Purpur_block = ColourDistance(78, 52, 64, r, g, b)
+	DPurpur_block = ColourDistance(63, 42, 52, r, g, b)
+	DDPurpur_block = ColourDistance(47, 32, 39, r, g, b)
+
+	LLapis_lazuli_ore = ColourDistance(252, 126, 73, r, g, b)
+	Lapis_lazuli_ore = ColourDistance(217, 109, 62, r, g, b)
+	DLapis_lazuli_ore = ColourDistance(178, 89, 51, r, g, b)
+	DDLapis_lazuli_ore = ColourDistance(133, 66, 39, r, g, b)
+
+	LLapis_lazuli_block = ColourDistance(252, 63, 63, r, g, b)
+	Lapis_lazuli_block = ColourDistance(217, 54, 54, r, g, b)
+	DLapis_lazuli_block = ColourDistance(178, 44, 44, r, g, b)
+	DDLapis_lazuli_block = ColourDistance(133, 33, 33, r, g, b)
+
+	LGray_dye = ColourDistance(182, 166, 162, r, g, b)
+	Gray_dye = ColourDistance(156, 142, 139, r, g, b)
+	DGray_dye = ColourDistance(127, 117, 114, r, g, b)
+	DDGray_dye = ColourDistance(96, 87, 85, r, g, b)
+
+	LEgg = ColourDistance(159, 175, 207, r, g, b)
+	Egg = ColourDistance(136, 150, 178, r, g, b)
+	DEgg = ColourDistance(112, 123, 145, r, g, b)
+	DDEgg = ColourDistance(84, 92, 109, r, g, b)
+
+	LCyan_Dye = ColourDistance(151, 125, 75, r, g, b)
+	Cyan_Dye = ColourDistance(130, 108, 64, r, g, b)
+	DCyan_Dye = ColourDistance(107, 88, 52, r, g, b)
+	DDCyan_Dye = ColourDistance(80, 66, 39, r, g, b)
+
+	LMelon_seeds = ColourDistance(76, 108, 149, r, g, b)
+	Melon_seeds = ColourDistance(65, 93, 128, r, g, b)
+	DMelon_seeds = ColourDistance(53, 75, 105, r, g, b)
+	DDMelon_seeds = ColourDistance(39, 56, 78, r, g, b)
+
+	Diff = math.min(LBonemeal, Bonemeal, DBonemeal, DDBonemeal, LInk_sac, Ink_sac, DInk_sac, DDInk_sac, LEmerald, Emerald, DEmerald, DDEmerald, LYellow_dye, Yellow_dye, DYellow_dye, DDYellow_dye, LPink_dye, Pink_dye, DPink_dye, DDPink_dye, LLapis_lazuli, Lapis_lazuli, DLapis_lazuli, DDLapis_lazuli, LMagenta_dye, Magenta_dye, DMagenta_dye, DDMagenta_dye,  LChorus_fruit, Chorus_fruit, DChorus_fruit, DDChorus_fruit,  LLime_dye, Lime_dye, DLime_dye, DDLime_dye,  LApple, Apple, DApple, DDApple,  LGold_nugget, Gold_nugget, DGold_nugget, DDGold_nugget, LGlowstone_dust, Glowstone_dust, DGlowstone_dust, DDGlowstone_dust,  LOrange_dye, Orange_dye, DOrange_dye, DDOrange_dye,  LLight_blue_dye, Light_blue_dye, DLight_blue_dye, DDLight_blue_dye,  LRed_dye, Red_dye, DRed_dye, DDRed_dye, LOak_leaves, Oak_leaves, DOak_leaves, DDOak_leaves, LPoisonous_potato, Poisonous_potato, DPoisonous_potato, DDPoisonous_potato,  LDark_oak_log, Dark_oak_log, DDark_oak_log, DDDark_oak_log,  LMagma_cream, Magma_cream, DMagma_cream, DDMagma_cream,  LPurple_dye, Purple_dye, DPurple_dye, DDPurple_dye, LNether_wart, Nether_wart, DNether_wart, DDNether_wart,  LPumpkin_seeds, Pumpkin_seeds, DPumpkin_seeds, DDPumpkin_seeds, LIce, Ice, DIce, DDIce, LMycelium, Mycelium, DMycelium, DDMycelium, LGrass, Grass, DGrass, DDGrass,  LPrismarine_crystals, Prismarine_crystals, DPrismarine_crystals, DDPrismarine_crystals, LCocoa_beans, Cocoa_beans, DCocoa_beans, DDCocoa_beans, LPurpur_block, Purpur_block, DPurpur_block, DDPurpur_block, LLapis_lazuli_ore, Lapis_lazuli_ore, DLapis_lazuli_ore, DDLapis_lazuli_ore, LLapis_lazuli_block, Lapis_lazuli_block, DLapis_lazuli_block, DDLapis_lazuli_block, LGray_dye, Gray_dye, DGray_dye, DDGray_dye, LEgg, Egg, DEgg, DDEgg,	 LCyan_Dye, Cyan_Dye, DCyan_Dye, DDCyan_Dye, LMelon_seeds, Melon_seeds, DMelon_seeds, DDMelon_seeds)
+
+	if(Diff == LBonemeal) then
+	DoThing("bone_meal", "L")
+	elseif(Diff == Bonemeal) then
+	DoThing("bone_meal")
+	elseif(Diff == DBonemeal) then
+	DoThing("bone_meal", "D")
+	elseif(Diff == DDBonemeal) then
+	DoThing("bone_meal", "DD")
+
+	elseif(Diff == LInk_sac) then
+	DoThing("ink_sac", "L")
+	elseif(Diff == Ink_sac) then
+	DoThing("ink_sac")
+	elseif(Diff == DInk_sac) then
+	DoThing("ink_sac", "D")
+	elseif(Diff == DDInk_sac) then
+	DoThing("ink_sac", "DD")
+
+	elseif(Diff == LEmerald) then
+	DoThing("emerald", "L")
+	elseif(Diff == Emerald) then
+	DoThing("emerald")
+	elseif(Diff == DEmerald) then
+	DoThing("emerald", "D")
+	elseif(Diff == DDEmerald) then
+	DoThing("emerald", "DD")
+
+	elseif(Diff == LYellow_dye) then
+	DoThing("yellow_dye", "L")
+	elseif(Diff == Yellow_dye) then
+	DoThing("yellow_dye")
+	elseif(Diff == DYellow_dye) then
+	DoThing("yellow_dye", "D")
+	elseif(Diff == DDYellow_dye) then
+	DoThing("yellow_dye", "DD")
+
+	elseif(Diff == LPink_dye) then
+	DoThing("pink_dye", "L")
+	elseif(Diff == Pink_dye) then
+	DoThing("pink_dye")
+	elseif(Diff == DPink_dye) then
+	DoThing("pink_dye", "D")
+	elseif(Diff == DDPink_dye) then
+	DoThing("pink_dye", "DD")
+
+	elseif(Diff == LLapis_lazuli) then
+	DoThing("lapis_lazuli", "L")
+	elseif(Diff == Lapis_lazuli) then
+	DoThing("lapis_lazuli")
+	elseif(Diff == DLapis_lazuli) then
+	DoThing("lapis_lazuli", "D")
+	elseif(Diff == DDLapis_lazuli) then
+	DoThing("lapis_lazuli", "DD")
+
+	elseif(Diff == LMagenta_dye) then
+	DoThing("magenta_dye", "L")
+	elseif(Diff == Magenta_dye) then
+	DoThing("magenta_dye")
+	elseif(Diff == DMagenta_dye) then
+	DoThing("magenta_dye", "D")
+	elseif(Diff == DDMagenta_dye) then
+	DoThing("magenta_dye", "DD")
+
+	elseif(Diff == LChorus_fruit) then
+	DoThing("chorus_fruit", "L")
+	elseif(Diff == Chorus_fruit) then
+	DoThing("chorus_fruit")
+	elseif(Diff == DChorus_fruit) then
+	DoThing("chorus_fruit", "D")
+	elseif(Diff == DDChorus_fruit) then
+	DoThing("chorus_fruit", "DD")
+
+	elseif(Diff == LLime_dye) then
+	DoThing("lime_dye", "L")
+	elseif(Diff == Lime_dye) then
+	DoThing("lime_dye")
+	elseif(Diff == DLime_dye) then
+	DoThing("lime_dye", "D")
+	elseif(Diff == DDLime_dye) then
+	DoThing("lime_dye", "DD")
+
+	elseif(Diff == LApple) then
+	DoThing("apple", "L")
+	elseif(Diff == Apple) then
+	DoThing("apple")
+	elseif(Diff == DApple) then
+	DoThing("apple", "D")
+	elseif(Diff == DDApple) then
+	DoThing("apple", "DD")
+
+	elseif(Diff == LGold_nugget) then
+	DoThing("gold_nugget", "L")
+	elseif(Diff == Gold_nugget) then
+	DoThing("gold_nugget")
+	elseif(Diff == DGold_nugget) then
+	DoThing("gold_nugget", "D")
+	elseif(Diff == DDGold_nugget) then
+	DoThing("gold_nugget", "DD")
+
+	elseif(Diff == LGlowstone_dust) then
+	DoThing("glowstone_dust", "L")
+	elseif(Diff == Glowstone_dust) then
+	DoThing("glowstone_dust")
+	elseif(Diff == DGlowstone_dust) then
+	DoThing("glowstone_dust", "D")
+	elseif(Diff == DDGlowstone_dust) then
+	DoThing("glowstone_dust", "DD")
+
+	elseif(Diff == LOrange_dye) then
+	DoThing("orange_dye", "L")
+	elseif(Diff == Orange_dye) then
+	DoThing("orange_dye")
+	elseif(Diff == DOrange_dye) then
+	DoThing("orange_dye", "D")
+	elseif(Diff == DDOrange_dye) then
+	DoThing("orange_dye", "DD")
+
+	elseif(Diff == LLight_blue_dye) then
+	DoThing("light_blue_dye", "L")
+	elseif(Diff == Light_blue_dye) then
+	DoThing("light_blue_dye")
+	elseif(Diff == DLight_blue_dye) then
+	DoThing("light_blue_dye", "D")
+	elseif(Diff == DDLight_blue_dye) then
+	DoThing("light_blue_dye", "DD")
+
+	elseif(Diff == LRed_dye) then
+	DoThing("red_dye", "L")
+	elseif(Diff == Red_dye) then
+	DoThing("red_dye")
+	elseif(Diff == DRed_dye) then
+	DoThing("red_dye", "D")
+	elseif(Diff == DDRed_dye) then
+	DoThing("red_dye", "DD")
+
+	elseif(Diff == LOak_leaves) then
+	DoThing("oak_leaves", "L")
+	elseif(Diff == Oak_leaves) then
+	DoThing("oak_leaves")
+	elseif(Diff == DOak_leaves) then
+	DoThing("oak_leaves", "D")
+	elseif(Diff == DDOak_leaves) then
+	DoThing("oak_leaves", "DD")
+
+	elseif(Diff == LPoisonous_potato) then
+	DoThing("poisonous_potato", "L")
+	elseif(Diff == Poisonous_potato) then
+	DoThing("poisonous_potato")
+	elseif(Diff == DPoisonous_potato) then
+	DoThing("poisonous_potato", "D")
+	elseif(Diff == DDPoisonous_potato) then
+	DoThing("poisonous_potato", "DD")
+
+	elseif(Diff == LDark_oak_log) then
+	DoThing("dark_oak_log", "L")
+	elseif(Diff == Dark_oak_log) then
+	DoThing("dark_oak_log")
+	elseif(Diff == DDark_oak_log) then
+	DoThing("dark_oak_log", "D")
+	elseif(Diff == DDDark_oak_log) then
+	DoThing("dark_oak_log", "DD")
+
+	elseif(Diff == LMagma_cream) then
+	DoThing("magma_cream", "L")
+	elseif(Diff == Magma_cream) then
+	DoThing("magma_cream")
+	elseif(Diff == DMagma_cream) then
+	DoThing("magma_cream", "D")
+	elseif(Diff == DDMagma_cream) then
+	DoThing("magma_cream", "DD")
+
+	elseif(Diff == LPurple_dye) then
+	DoThing("purple_dye", "L")
+	elseif(Diff == Purple_dye) then
+	DoThing("purple_dye")
+	elseif(Diff == DPurple_dye) then
+	DoThing("purple_dye", "D")
+	elseif(Diff == DDPurple_dye) then
+	DoThing("purple_dye", "DD")
+
+	elseif(Diff == LNether_wart) then
+	DoThing("nether_wart", "L")
+	elseif(Diff == Nether_wart) then
+	DoThing("nether_wart")
+	elseif(Diff == DNether_wart) then
+	DoThing("nether_wart", "D")
+	elseif(Diff == DDNether_wart) then
+	DoThing("nether_wart", "DD")
+
+	elseif(Diff == LPumpkin_seeds) then
+	DoThing("pumpkin_seeds", "L")
+	elseif(Diff == Pumpkin_seeds) then
+	DoThing("pumpkin_seeds")
+	elseif(Diff == DPumpkin_seeds) then
+	DoThing("pumpkin_seeds", "D")
+	elseif(Diff == DDPumpkin_seeds) then
+	DoThing("pumpkin_seeds", "DD")
+
+	elseif(Diff == LIce) then
+	DoThing("ice", "L")
+	elseif(Diff == Ice) then
+	DoThing("ice")
+	elseif(Diff == DIce) then
+	DoThing("ice", "D")
+	elseif(Diff == DDIce) then
+	DoThing("ice", "DD")
+
+	elseif(Diff == LMycelium) then
+	DoThing("mycelium", "L")
+	elseif(Diff == Mycelium) then
+	DoThing("mycelium")
+	elseif(Diff == DMycelium) then
+	DoThing("mycelium", "D")
+	elseif(Diff == DDMycelium) then
+	DoThing("mycelium", "DD")
+
+	elseif(Diff == LGrass) then
+	DoThing("grass", "L")
+	elseif(Diff == Grass) then
+	DoThing("grass")
+	elseif(Diff == DGrass) then
+	DoThing("grass", "D")
+	elseif(Diff == DDGrass) then
+	DoThing("grass", "DD")
+
+	elseif(Diff == LPrismarine_crystals) then
+	DoThing("prismarine_crystals", "L")
+	elseif(Diff == Prismarine_crystals) then
+	DoThing("prismarine_crystals")
+	elseif(Diff == DPrismarine_crystals) then
+	DoThing("prismarine_crystals", "D")
+	elseif(Diff == DDPrismarine_crystals) then
+	DoThing("prismarine_crystals", "DD")
+
+	elseif(Diff == LCocoa_beans) then
+	DoThing("cocoa_beans", "L")
+	elseif(Diff == Cocoa_beans) then
+	DoThing("cocoa_beans")
+	elseif(Diff == DCocoa_beans) then
+	DoThing("cocoa_beans", "D")
+	elseif(Diff == DDCocoa_beans) then
+	DoThing("cocoa_beans", "DD")
+
+	elseif(Diff == LPurpur_block) then
+	DoThing("purpur_block", "L")
+	elseif(Diff == Purpur_block) then
+	DoThing("purpur_block")
+	elseif(Diff == DPurpur_block) then
+	DoThing("purpur_block", "D")
+	elseif(Diff == DDPurpur_block) then
+	DoThing("purpur_block", "DD")
+
+	elseif(Diff == LLapis_lazuli_ore) then
+	DoThing("lapis_ore", "L")
+	elseif(Diff == Lapis_lazuli_ore) then
+	DoThing("lapis_ore")
+	elseif(Diff == DLapis_lazuli_ore) then
+	DoThing("lapis_ore", "D")
+	elseif(Diff == DDLapis_lazuli_ore) then
+	DoThing("lapis_ore", "DD")
+
+	elseif(Diff == LLapis_lazuli_block) then
+	DoThing("lapis_block", "L")
+	elseif(Diff == Lapis_lazuli_block) then
+	DoThing("lapis_block")
+	elseif(Diff == DLapis_lazuli_block) then
+	DoThing("lapis_block", "D")
+	elseif(Diff == DDLapis_lazuli_block) then
+	DoThing("lapis_block", "DD")
+
+	elseif(Diff == LGray_dye) then
+	DoThing("gray_dye", "L")
+	elseif(Diff == Gray_dye) then
+	DoThing("gray_dye")
+	elseif(Diff == DGray_dye) then
+	DoThing("gray_dye", "D")
+	elseif(Diff == DDGray_dye) then
+	DoThing("gray_dye", "DD")
+
+	elseif(Diff == LEgg) then
+	DoThing("egg", "L")
+	elseif(Diff == Egg) then
+	DoThing("egg")
+	elseif(Diff == DEgg) then
+	DoThing("egg", "D")
+	elseif(Diff == DDEgg) then
+	DoThing("egg", "DD")
+
+	elseif(Diff == LCyan_Dye) then
+	DoThing("cyan_dye", "L")
+	elseif(Diff == Cyan_Dye) then
+	DoThing("cyan_dye")
+	elseif(Diff == DCyan_Dye) then
+	DoThing("cyan_dye", "D")
+	elseif(Diff == DDCyan_Dye) then
+	DoThing("cyan_dye", "DD")
+
+	elseif(Diff == LMelon_seeds) then
+	DoThing("melon_seeds", "L")
+	elseif(Diff == Melon_seeds) then
+	DoThing("melon_seeds")
+	elseif(Diff == DMelon_seeds) then
+	DoThing("melon_seeds", "D")
+	elseif(Diff == DDMelon_seeds) then
+	DoThing("melon_seeds", "DD")
+	end
+	end
+
+	MoveY = {
+		{1.96, 2.1},
+		{1.92, 2.2},
+		{1.88, 2.3},
+		{1.84, 2.4},
+		{1.82, 2.45},
+		{1.83, 2.5},
+		{1.86, 2.5},
+		{1.92, 2.5},
+		{1.9, 2.6},
+		{2.1, 2.45},
+		{2.1, 2.45},
+		{2.1, 2.5},
+		{2.1, 2.5},
+		{2.1, 2.6},
+		{2.1, 2.6},
+		{2.1, 2.6},
+		
+		{2.1, 2.6},
+		{2.1, 2.6},
+		{2.1, 2.6},
+		{2, 2.6},
+		{2, 2.6},
+		{2, 2.6},
+		{2, 2.5},
+		{1.9, 2.6},
+		{1.92, 2.5},
+		{1.86, 2.5},
+		{1.83, 2.5},
+		{1.82, 2.45},
+		{1.84, 2.4},
+		{1.82, 2.3},
+		{1.82, 2.3},
+		{1.8, 2.2}
+	}
+		
+		
+
+	column = {
+		{-36.6, -30.8},
+		{-34.9, -31.4},
+		{-32.9, -32},
+		{-30.9, -32.6},
+		{-28.7, -33},
+		{-26.7, -33.6},
+		{-24.5, -34.1},
+		{-22, -34.6},
+		{-19.6, -35.1},
+		{-17, -35.4},
+		{-14.7, -35.7},
+		{-12.1, -35.9},
+		{-9.3, -36.3},
+		{-6.7, -36.4},
+		{-3.9, -36.5},
+		{-1.5, -36.6},
+		{1.5, -36.6},
+		{3.9, -36.5},
+		{6.7, -36.4},
+		{9.3, -36.3},
+		{12.1, -35.9},
+		{14.7, -35.7},
+		{17, -35.4},
+		{19.6, -35.1},
+		{22, -34.6},
+		{24.5, -34.1},
+		{26.7, -33.6},
+		{28.7, -33},
+		{30.9, -32.6},
+		{32.9, -32},
+		{34.9, -31.4},
+		{36.6, -30.8},
+	}
+
+	--Drawing
+	xc = 1
+	yc = 1
+
+	for i = 1, 16 do
+		xloc = column[i][1]
+		yloc = column[i][2]
+		MoveY1cal = MoveY[i][1]
+		MoveY2cal = MoveY[i][2]
+		look(xloc, yloc)
+		Difference(xc, yc)
+		yc = yc + 1
+		yloc = yloc + MoveY1cal
+		for i = 1, 7 do
+			look(xloc, yloc)
+			yloc = yloc + MoveY1cal
+			Difference(xc, yc)
+			yc = yc + 1
+		end
+		for i = 1, 16 do
+			look(xloc, yloc)
+			Difference(xc, yc)
+			yc = yc + 1
+			yloc = yloc + MoveY2cal
+		end
+		for i = 1, 8 do
+			look(xloc, yloc)
+			yloc = yloc + MoveY1cal
+			Difference(xc, yc)
+			yc = yc + 1
+		end
+		xc = xc + 1
+		yc = 1
+		end
+		
+	for i = 17, 32 do
+		xloc = column[i][1]
+		yloc = column[i][2]
+		MoveY1cal = MoveY[i][1]
+		MoveY2cal = MoveY[i][2]
+		look(xloc, yloc)
+		Difference(xc, yc)
+		yc = yc + 1
+		yloc = yloc + MoveY1cal
+		for i = 1, 7 do
+			look(xloc, yloc)
+			yloc = yloc + MoveY1cal
+			Difference(xc, yc)
+			yc = yc + 1
+		end
+		for i = 1, 16 do
+			look(xloc, yloc)
+			Difference(xc, yc)
+			yc = yc + 1
+			yloc = yloc + MoveY2cal
+		end
+		for i = 1, 8 do
+			look(xloc, yloc)
+			yloc = yloc + MoveY1cal
+			Difference(xc, yc)
+			yc = yc + 1
+		end
+		xc = xc + 1
+		yc = 1
+		end
+	sleep(2000)
+	say("/art save Lolinka_"..images)
+	sleep(1000)
+	look(0, 0)
+	sleep(1000)
+	swapHand()
+	sleep(1000)
+	use()
+	sleep(1000)
+	use()
+	sleep(1000)
+	swapHand()
+	sleep(1000)
+end
