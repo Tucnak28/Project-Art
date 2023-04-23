@@ -8,7 +8,7 @@ function findItem(inv, item, size) {
   }
   return slot;
 }
-
+a
 function dyeBucket(inv, item) {
   // log the item we're dyeing
   Chat.log(item);
