@@ -47,7 +47,7 @@ function dyeBucket(inv, item) {
   Time.sleep(250);
   Client.waitTick()
   player.attack();
-  Time.sleep(150);
+  Time.sleep(200);
   Client.waitTick()
   inv.swap(45, mostUsedSlot); // Swap items back
   Client.waitTick()
@@ -55,7 +55,7 @@ function dyeBucket(inv, item) {
     // dye item to be used
     case "0":
       inv.swap(42, 45);
-      Time.sleep(150);
+      Time.sleep(200);
       Client.waitTick()
       player.attack();
       inv.swap(45, 42);
@@ -64,14 +64,14 @@ function dyeBucket(inv, item) {
       break;
     case "2":
       inv.swap(43, 45);
-      Time.sleep(150);
+      Time.sleep(200);
       Client.waitTick()
       player.attack();
       inv.swap(45, 43);
       break;
     case "3":
       inv.swap(43, 45);
-      Time.sleep(150);
+      Time.sleep(200);
       Client.waitTick()
       player.attack();
       Time.sleep(350);
@@ -105,7 +105,7 @@ function loadItems(neededDyes) {
     };
   }
   inv.close();
-  Time.sleep(50);
+  inv.sync();
   Client.waitTick();
 }
 
@@ -216,6 +216,8 @@ function getMapState(colorsObj, dyesJson) {
   //FS.open("translated.json").write(JSON.stringify(translatedArray));
 
   let array1D = translatedArray.flat();
+  if(array1D.every(val => val === array1D[0])) return false;
+
   let errorArray = [];
   for (const key in dyesJson) {
       if(array1D[key - 1] == dyesJson[key]) continue;
@@ -235,6 +237,32 @@ function getCurrentPacket() {
       Player.getPlayer().interactEntity(entity, true);
     }
   });
+}
+
+function getMostUsed(dyesJson) {
+  const values = Object.values(dyesJson);
+
+  // Create an object to store the counts of each value
+  const valueCounts = {};
+
+  // Count the occurrences of each value
+  values.forEach((value) => { 
+    if (value in valueCounts) {
+      valueCounts[value]++;
+    } else {
+      valueCounts[value] = 1;
+    }
+  });
+
+  // Get an array of the entries in the valueCounts object
+  const entries = Object.entries(valueCounts);
+
+  // Sort the entries based on the count of each value
+  entries.sort((a, b) => b[1] - a[1]);
+
+  const mostUsedValues = entries.map((entry) => entry[0]).map(x => "minecraft:" + x);
+
+  return mostUsedValues[0]
 }
 
 
@@ -292,40 +320,50 @@ let dyesJson = JSON.parse(FS.open("similar_colors.json").read());
 
 getCurrentPacket();
 Client.waitTick(5);
-getMapState(packet, dyesJson);
+let dyes = getMapState(packet, dyesJson);
+
+if(!dyes) {
+  const mostUsed = getMostUsed(dyesJson);
+  const feather = "minecraft:feather"
+  const coal = "minecraft:coal"
+  const bucket = "minecraft:bucket"
+  const items = [bucket, coal, feather, mostUsed];
+  loadItems(items);
+  dyeBucket(Player.openInventory(), mostUsed);
+}
+Client.waitTick(2);
+
+getCurrentPacket();
+Client.waitTick(5);
+dyes = getMapState(packet, dyesJson);
+
+Chat.log("dyes: " + dyes); //(3)[1, ["bone_meal", 0], ["bone_meal", 1]]
+
+
+Chat.log("dyesJSON: " + dyesJson[1]) //bone_meal0
+
+
+let dyeValues = [];
+for (let i = 0; i < dyes.length; i++) {
+  dyeValues.push(dyes[i][1]);
+}
 
 
 
 
-
-
-// Get an array of all the values in the object
-const values = Object.values(dyesJson);
-
-// Create an object to store the counts of each value
-const valueCounts = {};
-
-// Count the occurrences of each value
-values.forEach((value) => { 
-  if (value in valueCounts) {
-    valueCounts[value]++;
+const sortedDyeValues = dyeValues.reduce((acc, curr) => {
+  const index = acc.findIndex(element => element[0] === curr[0] && element[1] === curr[1]);
+  if (index === -1) {
+    acc.push([curr[0], curr[1], 1]);
   } else {
-    valueCounts[value] = 1;
+    acc[index][2] += 1;
   }
-});
-
+  return acc;
+}, []).sort((a, b) => b[2] - a[2]).map(dye => [dye[0], dye[1]]);
 
 
 // Get an array of the entries in the valueCounts object
-const entries = Object.entries(valueCounts);
 
-
-
-// Sort the entries based on the count of each value
-entries.sort((a, b) => b[1] - a[1]);
-//Chat.log(entries)
-//Chat.log(entries[0][0].charAt(entries[0][0].length - 1)); // Outputs: [3, 2, 1]
-// The most used values will be at the beginning of the array
 const mostUsedValues = entries.map((entry) => entry[0]).map(x => "minecraft:" + x);
 
 
@@ -338,17 +376,9 @@ const neededDyes = mostUsedValues.map(x => x.slice(0, -1)).reduce(function(acc, 
 
 
 
-neededDyes.unshift("minecraft:feather");
-neededDyes.unshift("minecraft:coal");
-neededDyes.unshift("minecraft:bucket");
 
 loadItems(neededDyes)
-
 let inv = Player.openInventory()
-
-const mostUsed = mostUsedValues[0]
-dyeBucket(inv, mostUsed)
-neededDyes.splice(0, 4); //4
 
 for (const key in neededDyes) {
   Chat.log(neededDyes[key]);
