@@ -11,9 +11,6 @@ function findItem(inv, item, size) {
 
 
 function dyeBucket(inv, item) {
-  // log the item we're dyeing
-  Chat.log(item);
-
   // find the slots for the required items
   const mostUsedSlot = findItem(inv, item.slice(0, -1), 45); // the most-used item (e.g. bone meal)
   const bucketSlot = findItem(inv, "minecraft:bucket", 45); // bucket slot
@@ -41,45 +38,40 @@ function dyeBucket(inv, item) {
   // attack with bucket, selecting correct slot,
   // looking in the right direction and swapping back items
   const player = Player.getPlayer();
-  smoothLook(Player.getPlayer(), 89, 1, 150, 50); // turn to the right direction
-  Client.waitTick();
+  smoothLook(Player.getPlayer(), 89, 1, 6, 1); // turn to the right direction
   inv.setSelectedHotbarSlotIndex(8);
-  Time.sleep(250);
-  Client.waitTick()
+  Client.waitTick(8)
   player.attack();
-  Time.sleep(200);
-  Client.waitTick()
+  Client.waitTick(8)
   inv.swap(45, mostUsedSlot); // Swap items back
-  Client.waitTick()
+  Client.waitTick(8)
   switch(item.charAt(item.length - 1)) {
     // dye item to be used
     case "0":
       inv.swap(42, 45);
-      Time.sleep(200);
-      Client.waitTick()
+      Client.waitTick(8)
       player.attack();
       inv.swap(45, 42);
+      Client.waitTick(8)
       break;
     case "1":
       break;
     case "2":
       inv.swap(43, 45);
-      Time.sleep(200);
-      Client.waitTick()
+      Client.waitTick(8)
       player.attack();
       inv.swap(45, 43);
+      Client.waitTick(8)
       break;
     case "3":
       inv.swap(43, 45);
-      Time.sleep(200);
-      Client.waitTick()
+      Client.waitTick(8)
       player.attack();
-      Time.sleep(350);
-      Client.waitTick()
+      Client.waitTick(8)
       player.attack();
-      Time.sleep(350);
-      Client.waitTick()
+      Client.waitTick(8)
       inv.swap(45, 43);
+      Client.waitTick(8)
       break;
     default:
       Chat.log("Unknown dye item: " + item);
@@ -116,7 +108,7 @@ function smoothLook(player, goalYaw, goalPitch, TIME, TIME_INTERVAL) {
   const STEPS = TIME / TIME_INTERVAL
   for(let i = 0; i < STEPS; i ++) {
       player.lookAt(player.getYaw() + yawDifference / STEPS, player.getPitch() + pitchDifference / STEPS)
-      Time.sleep(TIME_INTERVAL)
+      Client.waitTick(TIME_INTERVAL)
   }
 }
 
@@ -174,13 +166,14 @@ function dyePixel(inv, position, dye) {
 
   const [yaw, pitch] = position;
   ////Chat.log(yaw.toFixed(0) + ", " + pitch.toFixed(0) + ": " + dye);
-  smoothLook(Player.getPlayer(), yaw, pitch, 200, 25); //200, 50
+  smoothLook(Player.getPlayer(), yaw, pitch, 5, 1); //200, 50
+  //Client.waitTick(5);
   Player.getPlayer().attack();
   return 1
 }
 
 
-function getMapState(colorsObj, dyesJson) {
+function getMapState(colorsObj, dyesJson, first) {
   const colorsArray = [];
 
   for (let i = 0; i < colorsObj.length; i = i + 128) {
@@ -197,14 +190,14 @@ function getMapState(colorsObj, dyesJson) {
       colorsArray.push(rowArray);
   }
   const actualColors = colorsArray.filter((row, index) => index % 4 === 0);
-  
+  /*
   let numRows = actualColors.length;
   let numColumns = actualColors[0].length;
   let numElements = numRows * numColumns;
   
   Chat.log("Number of rows: " + numRows);
   Chat.log("Number of columns: " + numColumns);
-  Chat.log("Size of colorsArray: " + numElements);
+  Chat.log("Size of colorsArray: " + numElements);*/
 
     
   const translatedArray = actualColors.map(subArray => {
@@ -216,17 +209,26 @@ function getMapState(colorsObj, dyesJson) {
   //FS.open("translated.json").write(JSON.stringify(translatedArray));
 
   let array1D = translatedArray.flat();
-  if(array1D.every(val => val === array1D[0])) return false;
+  if(first && array1D.every(val => val === array1D[0])) return false;
 
   let errorArray = [];
   for (const key in dyesJson) {
       if(array1D[key - 1] == dyesJson[key]) continue;
       const index = parseInt(key);
-      const intDye = dyesJson[key].slice(0, -1);
+      let intDye = dyesJson[key].slice(0, -1);
+      const curDye = array1D[key - 1].slice(0, -1); 
       const intShade = parseInt(dyesJson[key].charAt(dyesJson[key].length - 1));
       const curShade = parseInt(array1D[key - 1].charAt(array1D[key - 1].length - 1));
-      const curDye = array1D[key - 1].slice(0, -1);
-      errorArray.push([index, [intDye, intShade], [curDye, curShade]]);
+      const shadeCorrection = curShade - intShade;
+      if(intDye == curDye) {
+        
+        if(shadeCorrection < 0) {intDye = "coal"}
+        else if(shadeCorrection > 0) {intDye = "feather"} 
+        else {
+          intDye = "done"
+        }
+      }
+      errorArray.push([index, [intDye, shadeCorrection]]);
   }
   return errorArray;
 }
@@ -234,7 +236,14 @@ function getMapState(colorsObj, dyesJson) {
 function getCurrentPacket() {
   World.getEntities().forEach(entity => {
     if(entity.getName().getString() == "Easel") {
-      Player.getPlayer().interactEntity(entity, true);
+      const inv = Player.openInventory()
+      Client.waitTick(5);
+      inv.swap(inv.getSelectedHotbarSlotIndex() + 36, 45);
+      Client.waitTick(5);
+      Player.getPlayer().interactEntity(entity, false);
+      Client.waitTick(5);
+      inv.swap(inv.getSelectedHotbarSlotIndex() + 36, 45);
+      Client.waitTick(5);
     }
   });
 }
@@ -265,7 +274,33 @@ function getMostUsed(dyesJson) {
   return mostUsedValues[0]
 }
 
+function getNeededDyes(dyes) {
+  let dyeValues = [];
+  for (let i = 0; i < dyes.length; i++) {
+    dyeValues.push(dyes[i][1]);
+  }
 
+  const sortedDyeValues = dyeValues.reduce((acc, curr) => {
+    const index = acc.findIndex(element => element[0] === curr[0] && element[1] === curr[1]);
+    if (index === -1) {
+      acc.push([curr[0], curr[1], 1]);
+    } else {
+      acc[index][2] += 1;
+    }
+    return acc;
+  }, []).sort((a, b) => b[2] - a[2]).map(dye => [dye[0], dye[1]]);
+
+  //array that have only one of every dye
+  const neededDyes = sortedDyeValues.reduce(function(acc, curr) {
+    const foundItem = acc.find(i => i === curr[0]);
+    if (!foundItem) {
+      acc.push(curr[0])
+    }
+    return acc;
+  }, []).map(x => "minecraft:" + x);
+
+  return neededDyes;
+}
 
 const startingTime = Time.time();
 
@@ -305,8 +340,8 @@ const listener = JsMacros.on("RecvPacket", JavaWrapper.methodToJava(event => {
     const widthObj = width.getInt(updateDataObj);
     const heightObj = height.getInt(updateDataObj);
     
-    Chat.log("width: " + widthObj);
-    Chat.log("height: " + heightObj);
+    //Chat.log("width: " + widthObj);
+    //Chat.log("height: " + heightObj);
     if(widthObj != 128 || heightObj != 128) return;
     let colorsObj = colors.get(updateDataObj);
     if (colorsObj == null) return;
@@ -316,74 +351,69 @@ const listener = JsMacros.on("RecvPacket", JavaWrapper.methodToJava(event => {
 
 const positions = JSON.parse(FS.open("Positions.json").read());
 const AntiAfk = JsMacros.runScript("scripts/Project-art/scripts/Anti-afk.ts");
-let dyesJson = JSON.parse(FS.open("similar_colors.json").read());
+const dyesJson = JSON.parse(FS.open("similar_colors.json").read());
 
 getCurrentPacket();
 Client.waitTick(5);
-let dyes = getMapState(packet, dyesJson);
+let dyes = getMapState(packet, dyesJson, true);
 
 if(!dyes) {
   const mostUsed = getMostUsed(dyesJson);
   const feather = "minecraft:feather"
   const coal = "minecraft:coal"
   const bucket = "minecraft:bucket"
-  const items = [bucket, coal, feather, mostUsed];
+  const items = [bucket, coal, feather, mostUsed.slice(0, -1)];
   loadItems(items);
   dyeBucket(Player.openInventory(), mostUsed);
+  Client.waitTick(5);
+  getCurrentPacket(); 
+  Client.waitTick(5);
+  dyes = getMapState(packet, dyesJson, false);
 }
-Client.waitTick(2);
-
-getCurrentPacket();
 Client.waitTick(5);
-dyes = getMapState(packet, dyesJson);
-
-Chat.log("dyes: " + dyes); //(3)[1, ["bone_meal", 0], ["bone_meal", 1]]
 
 
-Chat.log("dyesJSON: " + dyesJson[1]) //bone_meal0
-
-
-let dyeValues = [];
-for (let i = 0; i < dyes.length; i++) {
-  dyeValues.push(dyes[i][1]);
-}
-
-
-
-
-const sortedDyeValues = dyeValues.reduce((acc, curr) => {
-  const index = acc.findIndex(element => element[0] === curr[0] && element[1] === curr[1]);
-  if (index === -1) {
-    acc.push([curr[0], curr[1], 1]);
-  } else {
-    acc[index][2] += 1;
-  }
-  return acc;
-}, []).sort((a, b) => b[2] - a[2]).map(dye => [dye[0], dye[1]]);
-
-
-// Get an array of the entries in the valueCounts object
-
-const mostUsedValues = entries.map((entry) => entry[0]).map(x => "minecraft:" + x);
-
-
-
-
-const neededDyes = mostUsedValues.map(x => x.slice(0, -1)).reduce(function(acc, curr) {
-  if (acc.indexOf(curr) === -1) acc.push(curr);
-  return acc;
-}, []);
-
-
-
+let neededDyes = getNeededDyes(dyes);
 
 loadItems(neededDyes)
 let inv = Player.openInventory()
-
-for (const key in neededDyes) {
-  Chat.log(neededDyes[key]);
+let end = false;
+while(!end) {
+  end = true;
+  for (let dye in neededDyes) {
+    for (const info in dyes) {
+      if(neededDyes[dye].replace("minecraft:", "") != dyes[info][1][0]) { continue }
+      if(dyes[info][1][0] == "done") { continue };
+      let success = dyePixel(inv, positions[dyes[info][0]], neededDyes[dye])
+      if(success == -1) {
+        Chat.log("Failed to dye " + neededDyes[dye])
+        loadItems([neededDyes[dye]])
+        Client.waitTick()
+        dyePixel(inv, positions[dyes[info][0]], neededDyes[dye])
+      }
+      end = false;
+    }
+  }
+  dyes = getMapState(packet, dyesJson, false);
+  neededDyes = getNeededDyes(dyes);
+  //loadItems(neededDyes)
+  /*if(end) {
+    end = false;
+    const feather = "minecraft:feather"
+    const coal = "minecraft:coal"
+    const items = [feather, coal];
+    loadItems(items)
+    while(!end) {
+      Chat.log("dye: " + neededDyes[dye]);
+      Chat.log(dyes[info][1][0]);
+    }
+  }*/
 }
 
+const endingTime = Time.time();
+Chat.log("Art done in: " + ((endingTime - startingTime)/1000) + "s");
+
+/*
 let dyesUsed = 0;
 for (let dye in neededDyes) {
   for (const position in positions) {
@@ -397,9 +427,10 @@ for (let dye in neededDyes) {
     }
   }
   dyesUsed++;
-}
+}*/
 
 
+/*
 //Dying pixels with coal or feather based on the lastChar of the dye (0, 1, 2, 3)
 const feather = "minecraft:feather"
 const coal = "minecraft:coal"
@@ -444,8 +475,7 @@ while(!done) {
 
 
 
-const endingTime = Time.time();
-Chat.log("Art done in: " + (endingTime - startingTime));
+
 
 
 
