@@ -1,21 +1,9 @@
-function findItem(inv, item, size) {
-  let slot = null;
-  for (let i = 9; i <= size; i++) {
-    if (inv.getSlot(i)?.getItemID() === item) {
-      slot = i;
-      break;
-    }
-  }
-  return slot;
-}
-
-
 function dyeBucket(inv, item) {
   // find the slots for the required items
-  const mostUsedSlot = findItem(inv, item.slice(0, -1), 45); // the most-used item (e.g. bone meal)
-  const bucketSlot = findItem(inv, "minecraft:bucket", 45); // bucket slot
-  const featherSlot = findItem(inv, "minecraft:feather", 45); // feather slot
-  const coalSlot =  findItem(inv, "minecraft:coal", 45); // coal slot
+  const mostUsedSlot = inv.findItem(item.slice(0, -1))[0] // the most-used item (e.g. bone meal)
+  const bucketSlot = inv.findItem("minecraft:bucket")[0] // bucket slot
+  const featherSlot = inv.findItem("minecraft:feather")[0] // feather slot
+  const coalSlot =  inv.findItem("minecraft:coal")[0] // coal slot
 
   // make sure we have all required items, otherwise return null
   if (mostUsedSlot != null && bucketSlot != null && featherSlot != null && coalSlot != null) {   // Swap items as needed
@@ -155,13 +143,10 @@ function dyePixel(inv, position, dye) {
     }
     Client.waitTick();
     hotbarSlot = findHotbar(inv.getMap(), dye);
-    Client.waitTick();
   }
 
   if(hotbarSlot != inv.getSelectedHotbarSlotIndex()) {
-    Client.waitTick(2);
     inv.setSelectedHotbarSlotIndex(hotbarSlot);
-    Client.waitTick(2);
   }
 
   const [yaw, pitch] = position;
@@ -205,8 +190,6 @@ function getMapState(colorsObj, dyesJson, first) {
       return lookupTable[num.toString()];
   });
   });
-
-  //FS.open("translated.json").write(JSON.stringify(translatedArray));
 
   let array1D = translatedArray.flat();
   if(first && array1D.every(val => val === array1D[0])) return false;
@@ -353,6 +336,7 @@ const positions = JSON.parse(FS.open("Positions.json").read());
 const AntiAfk = JsMacros.runScript("scripts/Project-art/scripts/Anti-afk.ts");
 const dyesJson = JSON.parse(FS.open("similar_colors.json").read());
 
+
 getCurrentPacket();
 Client.waitTick(5);
 let dyes = getMapState(packet, dyesJson, true);
@@ -410,8 +394,12 @@ while(!end) {
   }*/
 }
 
+
+AntiAfk.getCtx().closeContext();
 const endingTime = Time.time();
 Chat.log("Art done in: " + ((endingTime - startingTime)/1000) + "s");
+
+
 
 /*
 let dyesUsed = 0;
