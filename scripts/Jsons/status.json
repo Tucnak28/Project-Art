@@ -1,10 +1,1 @@
-{
-    "processing": "",
-    "toBeProcessed": [
-        "similar_colors_1.json",
-        "similar_colors_2.json",
-        "similar_colors_3.json"
-    ],
-    "alreadyProcessed": [],
-    "total": 3
-}
+{"processing":"","toBeProcessed":[],"alreadyProcessed":["similar_colors1.json","similar_colors2.json","similar_colors3.json","similar_colors4.json","similar_colors5.json","similar_colors6.json","similar_colors7.json","similar_colors8.json","similar_colors9.json"]}

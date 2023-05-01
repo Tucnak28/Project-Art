@@ -1,8 +1,26 @@
-const { dyeBucket, loadItems, dyePixel, getMapState, getCurrentPacket, getMostUsed, getNeededDyes } = require('Art-functions.ts');
+const { dyeBucket, loadItems, dyePixel, getMapState, getCurrentPacket, getMostUsed, getNeededDyes, saveImage } = require('Art-functions.ts');
 
-const startingTime = Time.time();
+const name = "colors";
+
+const status = FS.open('Jsons/status.json');
+let {processing, toBeProcessed, alreadyProcessed} = JSON.parse(status.read());
+
+if(toBeProcessed.length == 0) {
+  Chat.log("No images to be done"); 
+}
+
+if(!processing || processing == "") {
+  processing = toBeProcessed.shift();
+  status.write(JSON.stringify({processing, toBeProcessed, alreadyProcessed}));
+}
+
+
+const positions = JSON.parse(FS.open("Positions.json").read());
+const AntiAfk = JsMacros.runScript("scripts/Project-art/scripts/Anti-afk.ts");
+const dyesJson = JSON.parse(FS.open(`Jsons/${processing}`).read());
 
 ////////////////Start
+const startingTime = Time.time();
 
 //Get the client instance:
 let clientInstance = Client.getMinecraft();
@@ -26,7 +44,7 @@ colors.setAccessible(true);
 
 let packet;
 
-const listener = JsMacros.on("RecvPacket", JavaWrapper.methodToJava(event => {
+const listenerPacket = JsMacros.on("RecvPacket", JavaWrapper.methodToJava(event => {
     if (event.type !== "MapUpdateS2CPacket") return;
 
     let updateDataObj = updateData.get(event.packet);
@@ -42,14 +60,18 @@ const listener = JsMacros.on("RecvPacket", JavaWrapper.methodToJava(event => {
     packet = colorsObj;
 }));
 
+let inv = Player.openInventory()
+const mapSlot = inv.findItem("minecraft:filled_map")[0];
+if(mapSlot) inv.dropSlot(mapSlot);
 
-const positions = JSON.parse(FS.open("Positions.json").read());
-const AntiAfk = JsMacros.runScript("scripts/Project-art/scripts/Anti-afk.ts");
-const dyesJson = JSON.parse(FS.open("similar_colors.json").read());
 
 
 getCurrentPacket();
 Client.waitTick(5);
+if(!packet) {
+  getCurrentPacket();
+  Client.waitTick(5);
+}
 let dyes = getMapState(packet, dyesJson, true);
 
 if(!dyes) {
@@ -71,7 +93,6 @@ Client.waitTick(5);
 let neededDyes = getNeededDyes(dyes);
 
 loadItems(neededDyes)
-let inv = Player.openInventory()
 let end = false;
 while(!end) {
   end = true;
@@ -94,10 +115,19 @@ while(!end) {
 }
 
 
+//Finishing
+saveImage(name + "_" + processing.charAt(processing.length - 6));
+alreadyProcessed.push(processing);
+processing = "";
+status.write(JSON.stringify({processing, toBeProcessed, alreadyProcessed}));
 AntiAfk.getCtx().closeContext();
+listenerPacket.off();
 const endingTime = Time.time();
 Chat.log("Art done in: " + ((endingTime - startingTime)/1000) + "s");
 
+if(toBeProcessed.length != 0) {
+  JsMacros.runScript("scripts/Project-art/scripts/Project-Art.ts");
+}
 
 
 

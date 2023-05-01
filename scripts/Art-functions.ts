@@ -116,11 +116,6 @@ function findRow(slot) {
     return -1;
 }
 
-function getItemSlot(inv, item) {
-    for(let i = 0; i < 45; i++) {
-    if(inv.getSlot(i).getItemID() == item) return i
-    }
-} 
     
 function findHotbar(map, item) {
     for (let i = 0; i <= 8; i++) {
@@ -135,7 +130,7 @@ function dyePixel(inv, position, dye) {
     let hotbarSlot = findHotbar(inv.getMap(), dye);
     if(hotbarSlot == -1) {
     
-    const row = rows[findRow(getItemSlot(inv, dye))];
+    const row = rows[findRow(inv.findItem(dye)[0])];
     if(!row) {
         return -1;
     }
@@ -287,4 +282,22 @@ function getNeededDyes(dyes) {
     return neededDyes;
 }
 
-module.exports = { dyeBucket, loadItems, dyePixel, getMapState, getCurrentPacket, getMostUsed, getNeededDyes };
+function saveImage(name) {
+    const player = Player.getPlayer();
+    const inv = Player.openInventory()
+    Client.waitTick(15);
+	Chat.say(`/art save ${name}`)
+    Client.waitTick(20);
+    smoothLook(player, 89, 1, 6, 1)
+    Client.waitTick(10);
+    inv.swap(inv.getSelectedHotbarSlotIndex() + 36, 45);
+    Client.waitTick(5);
+    player.interact();
+    Client.waitTick(10);
+    player.interact();
+    Client.waitTick(5);
+    inv.swap(inv.getSelectedHotbarSlotIndex() + 36, 45);
+	Client.waitTick(10);
+}
+
+module.exports = { dyeBucket, loadItems, dyePixel, getMapState, getCurrentPacket, getMostUsed, getNeededDyes, saveImage };
