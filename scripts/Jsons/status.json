@@ -1,0 +1,10 @@
+{
+    "processing": "",
+    "toBeProcessed": [
+        "similar_colors_1.json",
+        "similar_colors_2.json",
+        "similar_colors_3.json"
+    ],
+    "alreadyProcessed": [],
+    "total": 3
+}
