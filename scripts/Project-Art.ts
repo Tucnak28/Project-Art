@@ -36,8 +36,6 @@ const listener = JsMacros.on("RecvPacket", JavaWrapper.methodToJava(event => {
     const widthObj = width.getInt(updateDataObj);
     const heightObj = height.getInt(updateDataObj);
     
-    //Chat.log("width: " + widthObj);
-    //Chat.log("height: " + heightObj);
     if(widthObj != 128 || heightObj != 128) return;
     let colorsObj = colors.get(updateDataObj);
     if (colorsObj == null) return;
@@ -93,90 +91,12 @@ while(!end) {
   }
   dyes = getMapState(packet, dyesJson, false);
   neededDyes = getNeededDyes(dyes);
-  //loadItems(neededDyes)
-  /*if(end) {
-    end = false;
-    const feather = "minecraft:feather"
-    const coal = "minecraft:coal"
-    const items = [feather, coal];
-    loadItems(items)
-    while(!end) {
-      Chat.log("dye: " + neededDyes[dye]);
-      Chat.log(dyes[info][1][0]);
-    }
-  }*/
 }
 
 
 AntiAfk.getCtx().closeContext();
 const endingTime = Time.time();
 Chat.log("Art done in: " + ((endingTime - startingTime)/1000) + "s");
-
-
-
-/*
-let dyesUsed = 0;
-for (let dye in neededDyes) {
-  for (const position in positions) {
-    if(dyesJson[position].slice(0, -1) != neededDyes[dye].replace("minecraft:", "")) { continue }
-    const success = dyePixel(inv, positions[position], neededDyes[dye])
-    if(success == -1) {
-      Chat.log("Failed to dye " + neededDyes[dye])
-      const customizedDyes = neededDyes.slice(dyesUsed, neededDyes.length);
-      loadItems(customizedDyes)
-      dyePixel(inv, positions[position], neededDyes[dye])
-    }
-  }
-  dyesUsed++;
-}*/
-
-
-/*
-//Dying pixels with coal or feather based on the lastChar of the dye (0, 1, 2, 3)
-const feather = "minecraft:feather"
-const coal = "minecraft:coal"
-const items = [feather, coal];
-const currentArray = new Array(1024).fill(1);
-for(let position in dyesJson) {
-  const dye = dyesJson[position].slice(0, -1);
-  const mostUsedDye = mostUsed.slice(10, -1);
-  const shadeOfMostUsed = mostUsed.charAt(mostUsed.length - 1);
-  if(dye == mostUsedDye) currentArray[position - 1] = parseInt(shadeOfMostUsed);
-}
-loadItems(items);
-let done = false;
-
-while(!done) {
-  done = true;
-  for(let position in dyesJson) {
-    const intended = parseInt(dyesJson[position].charAt(dyesJson[position].length - 1));
-    let current = currentArray[position - 1];
-    if(current > intended) {
-      dyePixel(inv, positions[position], feather);
-      currentArray[position - 1] = current - 1;
-      done = false;
-    }
-  }
-}
-
-done = false;
-while(!done) {
-  done = true;
-  for(let position in dyesJson) {
-    const intended = parseInt(dyesJson[position].charAt(dyesJson[position].length - 1));
-    let current = currentArray[position - 1];
-    Chat.log(current + ">" + intended);
-    if(current < intended) {
-      dyePixel(inv, positions[position], coal);
-      currentArray[position - 1] = current + 1;
-      done = false;
-    }
-  }
-}
-
-
-
-
 
 
 
