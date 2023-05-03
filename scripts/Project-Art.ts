@@ -1,6 +1,6 @@
 const { dyeBucket, loadItems, dyePixel, getMapState, getCurrentPacket, getMostUsed, getNeededDyes, saveImage } = require('Art-functions.ts');
 
-const name = "colors";
+const name = "Boxing";
 
 const status = FS.open('Jsons/status.json');
 let {processing, toBeProcessed, alreadyProcessed} = JSON.parse(status.read());
@@ -82,7 +82,7 @@ if(!dyes) {
   const items = [bucket, coal, feather, mostUsed.slice(0, -1)];
   loadItems(items);
   dyeBucket(Player.openInventory(), mostUsed);
-  Client.waitTick(5);
+  Client.waitTick(10);
   getCurrentPacket(); 
   Client.waitTick(5);
   dyes = getMapState(packet, dyesJson, false);
@@ -93,6 +93,7 @@ Client.waitTick(5);
 let neededDyes = getNeededDyes(dyes);
 
 loadItems(neededDyes)
+let interations = 0;
 let end = false;
 while(!end) {
   end = true;
@@ -100,14 +101,16 @@ while(!end) {
     for (const info in dyes) {
       if(neededDyes[dye].replace("minecraft:", "") != dyes[info][1][0]) { continue }
       if(dyes[info][1][0] == "done") { continue };
+
       let success = dyePixel(inv, positions[dyes[info][0]], neededDyes[dye])
       if(success == -1) {
-        Chat.log("Failed to dye " + neededDyes[dye])
+        //Chat.log("Failed to dye " + neededDyes[dye])
         loadItems([neededDyes[dye]])
         Client.waitTick()
         dyePixel(inv, positions[dyes[info][0]], neededDyes[dye])
       }
       end = false;
+      interations++;
     }
   }
   dyes = getMapState(packet, dyesJson, false);
@@ -116,7 +119,7 @@ while(!end) {
 
 
 //Finishing
-saveImage(name + "_" + processing.charAt(processing.length - 6));
+saveImage(name + "_" + processing.match(/\d+/));
 alreadyProcessed.push(processing);
 processing = "";
 status.write(JSON.stringify({processing, toBeProcessed, alreadyProcessed}));
@@ -124,12 +127,11 @@ AntiAfk.getCtx().closeContext();
 listenerPacket.off();
 const endingTime = Time.time();
 Chat.log("Art done in: " + ((endingTime - startingTime)/1000) + "s");
+Chat.log("Iterations: " + interations);
 
 if(toBeProcessed.length != 0) {
   JsMacros.runScript("scripts/Project-art/scripts/Project-Art.ts");
 }
-
-
 
 /*
 // Iterate over original array and assign elements to 2D array

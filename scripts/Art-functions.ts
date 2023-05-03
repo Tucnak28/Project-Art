@@ -39,29 +39,29 @@ function dyeBucket(inv, item) {
       // dye item to be used
       case "0":
         inv.swap(42, 45);
-        Client.waitTick(8)
+        Client.waitTick(10)
         player.attack();
         inv.swap(45, 42);
-        Client.waitTick(8)
+        Client.waitTick(10)
         break;
       case "1":
         break;
       case "2":
         inv.swap(43, 45);
-        Client.waitTick(8)
+        Client.waitTick(10)
         player.attack();
         inv.swap(45, 43);
-        Client.waitTick(8)
+        Client.waitTick(10)
         break;
       case "3":
         inv.swap(43, 45);
-        Client.waitTick(8)
+        Client.waitTick(10)
         player.attack();
-        Client.waitTick(8)
+        Client.waitTick(10)
         player.attack();
-        Client.waitTick(8)
+        Client.waitTick(10)
         inv.swap(45, 43);
-        Client.waitTick(8)
+        Client.waitTick(10)
         break;
       default:
         Chat.log("Unknown dye item: " + item);
@@ -129,27 +129,25 @@ function findHotbar(map, item) {
 function dyePixel(inv, position, dye) {
     let hotbarSlot = findHotbar(inv.getMap(), dye);
     if(hotbarSlot == -1) {
-    
-    const row = rows[findRow(inv.findItem(dye)[0])];
-    if(!row) {
-        return -1;
-    }
+        Client.waitTick();
+        const row = rows[findRow(inv.findItem(dye)[0])];
+        if(!row) return -1;
 
-    for(let i = 0; i < row.length; i++) {
-        inv.swapHotbar(row[i], i);
-    }
-    Client.waitTick();
-    hotbarSlot = findHotbar(inv.getMap(), dye);
+        for(let i = 0; i < row.length; i++) {
+            inv.swapHotbar(row[i], i);
+        }
+        hotbarSlot = findHotbar(inv.getMap(), dye);
     }
 
     if(hotbarSlot != inv.getSelectedHotbarSlotIndex()) {
-    inv.setSelectedHotbarSlotIndex(hotbarSlot);
+        Client.waitTick();
+        inv.setSelectedHotbarSlotIndex(hotbarSlot);
     }
 
     const [yaw, pitch] = position;
     ////Chat.log(yaw.toFixed(0) + ", " + pitch.toFixed(0) + ": " + dye);
+    
     smoothLook(Player.getPlayer(), yaw, pitch, 4, 1); //200, 50
-    //Client.waitTick(5);
     Player.getPlayer().attack();
     return 1
 }
