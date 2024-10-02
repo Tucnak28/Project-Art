@@ -1,0 +1,25 @@
+use_entity {
+	target:5455790,
+	mouse:2,
+	x:0,
+	y:0.5014600157737732,
+	z:0,
+	hand:0,
+	sneaking:false
+}
+
+use_entity {
+	target:5455790,
+	mouse:1,
+	sneaking:false	
+}
+
+held_item_slot{
+	slotId:4 //0-8
+}
+
+look {
+	yaw:-19.01999855041504,
+	pitch:11.782670974731445,
+	onGround:false
+}

@@ -1,0 +1,1 @@
+streamlit run c:\Users\Tucna\Games\Minecraft\Project Art\ImageToArray\Python scripts\GUI.py
