@@ -1,6 +1,6 @@
 const { dyeBucket, loadItems, dyePixel, getMapState, getCurrentPacket, getMostUsed, getNeededDyes, saveImage } = require('Art-functions.ts');
 
-const name = "Boxing";
+const name = "X9P";
 
 const status = FS.open('Jsons/status.json');
 let {processing, toBeProcessed, alreadyProcessed} = JSON.parse(status.read());

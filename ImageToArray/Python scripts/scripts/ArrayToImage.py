@@ -221,10 +221,10 @@ iron_nugget1 = "#4a4e4e"
 iron_nugget2 = "#3c3f3f"
 iron_nugget3 = "#2d2f2f"
 
-birch_wood0 = "#7f5530"
-birch_wood1 = "#6e4929"
-birch_wood2 = "#5a3b22"
-birch_wood3 = "#432c19"
+birch_log0 = "#7f5530"
+birch_log1 = "#6e4929"
+birch_log2 = "#5a3b22"
+birch_log3 = "#432c19"
 
 beetroot0 = "#93566b"
 beetroot1 = "#7e4a5c"
@@ -485,10 +485,10 @@ color_map = {
   "iron_nugget1": iron_nugget1,
   "iron_nugget2": iron_nugget2,
   "iron_nugget3": iron_nugget3,
-  "birch_wood0": birch_wood0,
-  "birch_wood1": birch_wood1,
-  "birch_wood2": birch_wood2,
-  "birch_wood3": birch_wood3,
+  "birch_log0": birch_log0,
+  "birch_log1": birch_log1,
+  "birch_log2": birch_log2,
+  "birch_log3": birch_log3,
   "beetroot0": beetroot0,
   "beetroot1": beetroot1,
   "beetroot2": beetroot2,
