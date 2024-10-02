@@ -131,10 +131,10 @@ mycelium1 = "#5f5c76"
 mycelium2 = "#4e4b60"
 mycelium3 = "#3a3848"
 
-grass0 = "#7db037"
-grass1 = "#6c972f"
-grass2 = "#587c27"
-grass3 = "#425d1d"
+short_grass0 = "#7db037"
+short_grass1 = "#6c972f"
+short_grass2 = "#587c27"
+short_grass3 = "#425d1d"
 
 prismarine_crystals0 = "#5bd8d2"
 prismarine_crystals1 = "#4ebab5"
@@ -413,10 +413,10 @@ color_map = {
   "mycelium1": mycelium1,
   "mycelium2": mycelium2,
   "mycelium3": mycelium3,
-  "grass0": grass0,
-  "grass1": grass1,
-  "grass2": grass2,
-  "grass3": grass3,
+  "short_grass0": short_grass0,
+  "short_grass1": short_grass1,
+  "short_grass2": short_grass2,
+  "short_grass3": short_grass3,
   "prismarine_crystals0": prismarine_crystals0,
   "prismarine_crystals1": prismarine_crystals1,
   "prismarine_crystals2": prismarine_crystals2,
