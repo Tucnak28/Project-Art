@@ -15,6 +15,7 @@ if(!processing || processing == "") {
 }
 
 
+
 const positions = JSON.parse(FS.open("Positions.json").read());
 const AntiAfk = JsMacros.runScript("scripts/Project-art/scripts/Anti-afk.ts");
 const dyesJson = JSON.parse(FS.open(`Jsons/${processing}`).read());
@@ -27,37 +28,58 @@ let clientInstance = Client.getMinecraft();
 //Use reflection to get the Minecraft class
 let MapUpdateS2CPacket = Reflection.getClass("net.minecraft.class_2683");
 //Use reflection to get the field that holds the update data
-let updateData = Reflection.getDeclaredField(MapUpdateS2CPacket, "field_28016");
+let updateData = Reflection.getDeclaredField(MapUpdateS2CPacket, "comp_2274"); //1.19.2 field_28016
 //let id = Reflection.getDeclaredMethod(MapUpdateS2CPacket, "method_11644");
 
 let MapState = Reflection.getClass("net.minecraft.class_22$class_5637");
-let width = Reflection.getDeclaredField(MapState, "field_27894");
-let height = Reflection.getDeclaredField(MapState, "field_27895");
-let colors = Reflection.getDeclaredField(MapState, "field_27896");
+let width = Reflection.getDeclaredField(MapState, "comp_2318"); // 1.19.2 field_27894
+let height = Reflection.getDeclaredField(MapState, "comp_2319"); // 1.19.2 field_27895
+let colors = Reflection.getDeclaredField(MapState, "comp_2320"); // 1.19.2 field_27896
 
 
 updateData.setAccessible(true);
 width.setAccessible(true);
 height.setAccessible(true);
 colors.setAccessible(true);
+
 //id.setAccessible(true);
+
+
 
 let packet;
 
 const listenerPacket = JsMacros.on("RecvPacket", JavaWrapper.methodToJava(event => {
-    if (event.type !== "MapUpdateS2CPacket") return;
+  if (event.type !== "MapUpdateS2CPacket") return;
 
-    let updateDataObj = updateData.get(event.packet);
-    if (updateDataObj == null) return;
-    
-    //const idObj = id.invoke(event.packet);
-    const widthObj = width.getInt(updateDataObj);
-    const heightObj = height.getInt(updateDataObj);
-    
-    if(widthObj != 128 || heightObj != 128) return;
-    let colorsObj = colors.get(updateDataObj);
-    if (colorsObj == null) return;
-    packet = colorsObj;
+  let updateDataObj = updateData.get(event.packet);
+  if (updateDataObj == null) return;
+
+  // Check if updateDataObj is an Optional and retrieve the actual value
+  if (updateDataObj instanceof java.util.Optional) {
+      // Get the actual value contained in the Optional
+      let actualUpdateDataObj = updateDataObj.isPresent() ? updateDataObj.get() : null;
+      
+      if (actualUpdateDataObj == null) {
+          //Chat.log("No value present in Optional.");
+          return;
+      }
+
+      // Try to get the width and height
+      try {
+          const widthObj = width.get(actualUpdateDataObj);
+          const heightObj = height.get(actualUpdateDataObj);
+
+          if (widthObj != 128 || heightObj != 128) return;
+
+          let colorsObj = colors.get(actualUpdateDataObj);
+          if (colorsObj == null) return;
+          packet = colorsObj;
+      } catch (error) {
+          Chat.log("Error accessing fields: " + error);
+      }
+  } else {
+      Chat.log("UpdateData Object is not an Optional.");
+  }
 }));
 
 let inv = Player.openInventory()
