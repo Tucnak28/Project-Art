@@ -68,26 +68,68 @@ function dyeBucket(inv, item) {
         break;
     }
 }
+
+function waitForBackpackScreen() {
+    const maxWaitTime = 10000; // Maximum wait time in milliseconds
+    const checkInterval = 1000; // Interval to check backpack status in milliseconds
+    const cooldownTime = 3500; // Cooldown time in milliseconds after trying to open backpack
+    let elapsedTime = 0;
+
+    Chat.say("/backpack");
+    
+    // Flag to indicate if the backpack was attempted to be opened
+    let backpackOpened = true;
+
+    while (elapsedTime < maxWaitTime) {
+        // Check if the backpack is currently open
+        if (Player.openInventory().isContainer()) {
+            return true; // Backpack is accessible
+        }
+
+        // If the backpack was not open and we are still in the cooldown period
+        if (backpackOpened && elapsedTime >= cooldownTime) {
+            // Try to open the backpack again
+            Chat.say("/backpack");
+            backpackOpened = false; // Reset the flag to indicate we've just tried to open it
+            elapsedTime = 0; // Reset the elapsed time for the next cooldown
+        } else if (!backpackOpened) {
+            // If we just tried to open it, wait for the cooldown
+            Chat.log("Waiting for cooldown...");
+        }
+
+        Time.sleep(checkInterval); // Wait before checking again
+        elapsedTime += checkInterval;
+    }
+
+    return false; // Timed out waiting for the backpack
+}
+
   
   
 function loadItems(neededDyes) { 
-    Chat.say("/backpack");
-    JsMacros.waitForEvent("OpenScreen");
-    Client.waitTick()
-    let inv = Player.openInventory();
-    for(let k = 0; k <= 2; k++) {
-    for(let i = 0; i <= 89; i++) {
-        const itemID = inv.getSlot(i).getItemID();
-        if(neededDyes.includes(itemID)) {
-        const targetSlot = 89 - neededDyes.findIndex(id => id === itemID);
-        if(targetSlot < 54 || targetSlot == i) continue;
-        inv.swap(i, targetSlot);
-        Time.sleep(1);
-        }
-    };
+    Client.waitTick();
+    if (!waitForBackpackScreen()) {
+        Chat.log("Backpack is still on cooldown or not accessible.");
+        return;
     }
+
+    Client.waitTick();
+
+    let inv = Player.openInventory();
+
+    for(let k = 0; k <= 2; k++) {
+        for(let i = 0; i <= 89; i++) {
+            const itemID = inv.getSlot(i).getItemID();
+            if(neededDyes.includes(itemID)) {
+                const targetSlot = 89 - neededDyes.findIndex(id => id === itemID);
+                if(targetSlot < 54 || targetSlot == i) continue;
+                inv.swap(i, targetSlot);
+                Time.sleep(1);
+            }
+        };
+    }
+    Chat.log(neededDyes);
     inv.close();
-    inv.sync();
     Client.waitTick();
 }
 
