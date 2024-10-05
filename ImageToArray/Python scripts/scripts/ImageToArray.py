@@ -566,6 +566,9 @@ class Img2Arr:
     def ColorsJSON(self):
         # Open the image file using PIL
         im = self.image_path
+        
+        # Convert the image to RGB
+        im = im.convert('RGB')
 
         # get the width and height of the image
         width, height = im.size
