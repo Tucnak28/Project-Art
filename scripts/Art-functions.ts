@@ -168,6 +168,19 @@ function findHotbar(map, item) {
     return -1;
 }
 
+function dropFilledMaps(inv) {
+    const mapSlots = inv.findItem("minecraft:filled_map");
+
+    for (const mapSlot in mapSlots) {
+        const mapSlotName = inv.getSlot(mapSlots[mapSlot]).getName().getString();
+        
+        if (mapSlotName != "template") {
+            inv.dropSlot(mapSlots[mapSlot]); // Drop the slot if it's not a template
+        }
+    }
+}
+
+
 function dyePixel(inv, position, dye) {
     let hotbarSlot = findHotbar(inv.getMap(), dye);
     if(hotbarSlot == -1) {
@@ -340,4 +353,4 @@ function saveImage(name) {
 	Client.waitTick(10);
 }
 
-module.exports = { dyeBucket, loadItems, dyePixel, getMapState, getCurrentPacket, getMostUsed, getNeededDyes, saveImage };
+module.exports = { dyeBucket, loadItems, dyePixel, getMapState, getCurrentPacket, getMostUsed, getNeededDyes, saveImage, dropFilledMaps };
