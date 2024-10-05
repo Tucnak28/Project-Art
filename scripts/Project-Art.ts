@@ -1,6 +1,6 @@
 const { dyeBucket, loadItems, dyePixel, getMapState, getCurrentPacket, getMostUsed, getNeededDyes, saveImage } = require('Art-functions.ts');
 
-const name = "X9P";
+const name = "Junji";
 
 const status = FS.open('Jsons/status.json');
 let {processing, toBeProcessed, alreadyProcessed} = JSON.parse(status.read());
@@ -84,7 +84,9 @@ const listenerPacket = JsMacros.on("RecvPacket", JavaWrapper.methodToJava(event 
 
 let inv = Player.openInventory()
 const mapSlot = inv.findItem("minecraft:filled_map")[0];
-if(mapSlot) inv.dropSlot(mapSlot);
+const mapSlotName = inv.getSlot(mapSlot).getName().getString();
+
+if(mapSlot && mapSlotName != "template") inv.dropSlot(mapSlot); //template name is for canvas maps used for starting the art
 
 
 
