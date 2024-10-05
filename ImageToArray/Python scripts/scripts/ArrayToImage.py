@@ -597,5 +597,5 @@ class Arr2Img:
     image.putdata(pixels)
 
     # save the image
-    image.save("MinecraftImage.png")
+    # image.save("MinecraftImage.png")
     return image

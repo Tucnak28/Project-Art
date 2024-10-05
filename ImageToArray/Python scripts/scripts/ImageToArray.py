@@ -599,18 +599,19 @@ class Img2Arr:
         for index, color_name in enumerate(similar_color_names):
             data[index + 1] = color_name
 
-        # get the script directory
+        # Get the script directory
         script_dir = os.path.dirname(os.path.abspath(__file__))
 
-        # define the target directory
-        target_dir = os.path.join(script_dir, "JSONs")
+        # Define the target directory one level up
+        parent_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
+        target_dir = os.path.join(parent_dir, "JSONs")
 
-        # create the target directory if it does not exist
+        # Create the target directory if it does not exist
         if not os.path.exists(target_dir):
             os.makedirs(target_dir)
 
-        # define the source and target paths
-        source = f"similar_colors{self.index}.json"
+        # Define the source and target paths
+        source = f"canvas{self.index}.json"
         target = os.path.join(target_dir, source)
 
         # write the JSON file to the target directory
