@@ -1,6 +1,7 @@
 import io
 import os
 import shutil
+import numpy as np
 
 # define the colors and their names
 bone_meal0 = "#fcf9f2"
@@ -575,26 +576,34 @@ class Img2Arr:
 
         # create an empty list to store the names of the most similar colors
         similar_color_names = []
+        
+        # Pre-compute RGB values for colors and store in a dictionary
+        rgb_colors = {color: (
+            int(color[1:3], 16), 
+            int(color[3:5], 16), 
+            int(color[5:7], 16)
+        ) for color in colors}
 
-        # iterate over the pixels in the image
-        for y in range(height):
-          for x in range(width):
-            # get the pixel at position (x, y)
-            pixel = im.getpixel((x, y))
+        # Create a NumPy array for the image pixels
+        image_pixels = np.array([im.getpixel((x, y)) for y in range(height) for x in range(width)])
+
+        # Precompute the squared distances to all colors
+        color_distances = np.zeros((len(rgb_colors), len(image_pixels)))
+
+        # Calculate the squared distances
+        for idx, (color, (r, g, b)) in enumerate(rgb_colors.items()):
+            color_distances[idx] = np.sum((image_pixels - np.array([r, g, b])) ** 2, axis=1)
+
+        # Find the closest colors for all pixels
+        closest_colors = np.argmin(color_distances, axis=0)
+
+        # Add the name of the most similar color to the list
+        for closest_color_idx in closest_colors:
+            similar_color_names.append(color_names[colors[closest_color_idx]])  
             
-            # find the most similar color
-            min_distance = float("inf")
-            min_color = None
-            for color in colors:
-                # convert the hexadecimal color value to RGB
-                r, g, b = int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
-                distance = sum((p - c) ** 2 for p, c in zip(pixel, (r, g, b))) ** 0.5
-                if distance < min_distance:
-                    min_distance = distance
-                    min_color = color
-
-            # add the name of the most similar color to the list
-            similar_color_names.append(color_names[min_color])
+            
+            
+            
 
 
         data = {}
