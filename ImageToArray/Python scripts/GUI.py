@@ -42,6 +42,15 @@ class ImageProcessor:
         self.input_area.bind("<Leave>", lambda event: self.input_area.config(bg="white"))
         self.input_area.bind("<Button-1>", self.open_file_or_folder)
 
+
+    def count_unique_colors(self, image):
+        # Convert the image to RGB mode and get the colors
+        image = image.convert("RGB")
+        colors = image.getcolors(maxcolors=1000000)  # Get all colors
+        if colors is not None:
+            return len(colors)  # Return the count of unique colors
+        return 0  # If there are no colors, return 0
+        
     def open_file_or_folder(self, event):
         # Ask the user if they want to select a folder or a single file
         choice = messagebox.askyesno("Select Folder", "Would you like to select a folder?")
@@ -78,7 +87,7 @@ class ImageProcessor:
             messagebox.showerror("Error", "No images found in the selected folder.")
 
 
-    def ToArray_thread(self, image_path, index):
+    def ToArray_thread(self, image_path, index, original_color_count):
         color_converter = Img2Arr(image_path, index)  # pass image_path and index arguments
         self.JSON = color_converter.ColorsJSON()
         
@@ -126,16 +135,30 @@ class ImageProcessor:
 
         # Indicate processing is done
         self.loading_label.config(text=f"Processing canvas{index}.json complete!")
+        
+        # Count unique colors in the processed image
+        processed_color_count = self.count_unique_colors(self.image)  # Corrected reference
+
+        # Update the GUI after image processing is done
+        self.update_gui_with_image(self.image)  # Corrected reference
+
+        # Indicate processing is done
+        self.loading_label.config(text=f"Processing canvas{index}.json complete!\n"
+                                       f"Processed unique colors: {processed_color_count}")
 
     def process_image(self, image, index=0):
-        self.JSON = None  # Initialize self.JSON to avoid accessing before assignment
+            self.JSON = None  # Initialize self.JSON to avoid accessing before assignment
 
-        # Indicate that processing has started
-        self.loading_label.config(text=f"Processing image for canvas{index}.json...")
+            # Count unique colors in the original image
+            original_color_count = self.count_unique_colors(image)
+            
+            # Indicate that processing has started
+            self.loading_label.config(text=f"Processing image for canvas{index}.json...\n"
+                                           f"Original unique colors: {original_color_count}")
 
-        # Create and start the first thread
-        t1 = threading.Thread(target=self.ToArray_thread, args=(image, index))
-        t1.start()
+            # Create and start the first thread
+            t1 = threading.Thread(target=self.ToArray_thread, args=(image, index, original_color_count))
+            t1.start()
 
     def update_gui_with_image(self, image):
         # Convert the image to a format Tkinter can display
