@@ -1,3 +1,4 @@
+import shutil
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox
@@ -77,17 +78,18 @@ class ImageProcessor:
     def process_folder(self, folder_name):
         # Process all image files in the folder
         image_files = [f for f in os.listdir(folder_name) if f.endswith(('.png', '.jpg'))]
+        imagesLength = len(image_files)
 
         if image_files:
             for index, image_file in enumerate(image_files):
                 image_path = os.path.join(folder_name, image_file)
                 self.image1 = Image.open(image_path)
-                self.process_image(self.image1, index)
+                self.process_image(self.image1, index, imagesLength)
         else:
             messagebox.showerror("Error", "No images found in the selected folder.")
 
 
-    def ToArray_thread(self, image_path, index, original_color_count):
+    def ToArray_thread(self, image_path, index, imagesLength):
         color_converter = Img2Arr(image_path, index)  # pass image_path and index arguments
         self.JSON = color_converter.ColorsJSON()
         
@@ -101,13 +103,16 @@ class ImageProcessor:
         # Path where status.json will be saved
         json_directory = os.path.dirname(self.JSON)  # Assuming self.JSON contains the path of the generated JSON
         status_file_path = os.path.join(json_directory, "status.json")
+        
 
         # Ensure the directory exists
         os.makedirs(json_directory, exist_ok=True)
 
+        
+
         # Prepare data for status.json
         status_data = {
-            "toBeProcessed": [f"canvas{i}.json" for i in range(index)],  # Adjust as needed
+            "toBeProcessed": [f"canvas{i}.json" for i in range(imagesLength)],  # Adjust as needed
             "alreadyProcessed": []
         }
 
@@ -146,7 +151,7 @@ class ImageProcessor:
         self.loading_label.config(text=f"Processing canvas{index}.json complete!\n"
                                        f"Processed unique colors: {processed_color_count}")
 
-    def process_image(self, image, index=0):
+    def process_image(self, image, index=0, imagesLength=1):
             self.JSON = None  # Initialize self.JSON to avoid accessing before assignment
 
             # Count unique colors in the original image
@@ -157,7 +162,7 @@ class ImageProcessor:
                                            f"Original unique colors: {original_color_count}")
 
             # Create and start the first thread
-            t1 = threading.Thread(target=self.ToArray_thread, args=(image, index, original_color_count))
+            t1 = threading.Thread(target=self.ToArray_thread, args=(image, index, imagesLength))
             t1.start()
 
     def update_gui_with_image(self, image):
