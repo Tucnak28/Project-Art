@@ -85,6 +85,7 @@ class ImageProcessor:
                 image_path = os.path.join(folder_name, image_file)
                 self.image1 = Image.open(image_path)
                 self.process_image(self.image1, index, imagesLength)
+                print("Index ", index, " Done");
         else:
             messagebox.showerror("Error", "No images found in the selected folder.")
 
